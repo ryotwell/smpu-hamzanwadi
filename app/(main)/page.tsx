@@ -6,6 +6,7 @@ import {
     GraduationCap, BookOpen, Users, Award, ArrowRight,
     CalendarDays, ChevronDown, CheckCircle, ChevronRight,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export const metadata = {
     title: "SMP Unggulan Hamzanwadi — Sekolah Unggulan Berkarakter Islami",
@@ -32,46 +33,69 @@ export default async function HomePage() {
         <div className="bg-[#f8f7f2] text-[#1a1a1a] font-sans">
             <Navbar />
 
-            {/* ── HERO ─────────────────────────────────────────────────────── */}
-            <section className="relative h-svh flex items-center overflow-hidden">
-                <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover" poster="/assets/hero-preview.jpg">
+            <div className="relative isolate px-6 pt-14 lg:px-8 h-svh flex items-center">
+                {/* Full background video */}
+                <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="absolute inset-0 w-full h-full object-cover -z-10"
+                    poster="/assets/images/hero-image-coba.jpg"
+                >
                     <source src="/assets/hero.mp4" type="video/mp4" />
                 </video>
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0a2a1a]/70 via-[#0a2a1a]/50 to-[#0a2a1a]/80" />
-
-                {/* Geometric accent */}
-                <div className="absolute right-0 top-0 h-full w-1/3 opacity-10" style={{backgroundImage:"repeating-linear-gradient(60deg,transparent,transparent 30px,#d4a017 30px,#d4a017 31px)"}}>
-                </div>
-
-                <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                    <div className="max-w-3xl">
-                        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold mb-6 uppercase tracking-wider">
-                            <span className="h-1.5 w-1.5 rounded-full bg-amber-400 animate-pulse inline-block" />
-                            NPSN {process.env.NEXT_PUBLIC_SCHOOL_NPSN} · Lombok Timur, NTB
+                {/* Overlay for better text contrast */}
+                <div className="absolute inset-0 bg-black/40 dark:bg-black/70 -z-10" />
+                <div className="mx-auto max-w-2xl">
+                    <Link href="/ppdb/info" className="hidden sm:mb-8 sm:flex sm:justify-center">
+                        <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-100 dark:text-gray-200 ring-1 ring-gray-200 dark:ring-gray-700 bg-black/30 dark:bg-black/40 hover:ring-gray-300 dark:hover:ring-gray-500">
+                            Penerimaan Peserta Didik Baru (PPDB) Tahun {new Date().getFullYear()}.&nbsp;
                         </div>
-                        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.1] tracking-tight">
-                            Mencetak Generasi<br />
-                            <span className="text-amber-400">Unggul &amp; Berkarakter</span>
-                        </h1>
-                        <p className="mt-5 text-lg text-white/70 max-w-xl leading-relaxed">
-                            SMP Unggulan Hamzanwadi — pendidikan berkualitas di bawah naungan pesantren Hamzanwadi, memadukan ilmu umum dan ilmu agama.
+                    </Link>
+                    <div className="text-center">
+                        <img
+                            src="/assets/smpuhamzanwadi-panjang.png"
+                            alt="SMPU HAMZANWADI"
+                            className="w-full"
+                        />
+                        <p className="mt-8 text-lg font-medium text-pretty text-gray-100 dark:text-gray-200 sm:text-xl/8 drop-shadow">
+                            Temukan informasi seputar profil sekolah, kegiatan, prestasi, dan pendaftaran siswa baru di sini.
                         </p>
-                        <div className="mt-8 flex flex-wrap gap-4">
-                            <Link href="/ppdb/form" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-amber-500 hover:bg-amber-400 text-[#0a2a1a] font-bold text-sm transition-all active:scale-95 shadow-lg shadow-amber-500/30">
-                                Daftar PPDB {new Date().getFullYear()} <ArrowRight className="h-4 w-4" />
+                        <div className="mt-10 flex items-center justify-center gap-x-6">
+                            <Link
+                                href="/ppdb/info"
+                                className="rounded-md bg-primary px-3.5 py-2.5 text-base font-semibold text-white shadow-xs hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                            >
+                                Daftar Sekarang
                             </Link>
-                            <a href="#tentang" className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-white/20 hover:border-white/40 text-white font-semibold text-sm transition-all">
-                                Lihat Profil
+                            <a href="#" className="text-base font-semibold text-white dark:text-white hover:underline">
+                                Lihat Profil Sekolah <span aria-hidden="true">→</span>
                             </a>
                         </div>
                     </div>
                 </div>
-
-                {/* Scroll cue */}
-                <a href="#tentang" className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 text-white/50 hover:text-white/80 transition-colors">
-                    <ChevronDown className="h-5 w-5 animate-bounce" />
-                </a>
-            </section>
+                <div className="absolute bottom-10 left-1/2 translate-x-[-50%] mb-4 flex justify-center md:hidden">
+                    <Button className="flex flex-col items-center justify-center gap-1 text-primary/80" variant="ghost">
+                        <div>
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="size-6 animate-bounce"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3"
+                                />
+                            </svg>
+                        </div>
+                    </Button>
+                </div>
+            </div>
 
             {/* ── STATS ─────────────────────────────────────────────────── */}
             <section id="tentang" className="bg-[#0a2a1a] py-14">
@@ -120,7 +144,7 @@ export default async function HomePage() {
                             <div key={p.id} className="group relative overflow-hidden rounded-2xl border border-stone-200 bg-white hover:border-[#0a2a1a]/20 hover:shadow-xl transition-all duration-300">
                                 {p.image && <img src={p.image} alt={p.name} className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500" />}
                                 {!p.image && (
-                                    <div className="w-full h-44 flex items-center justify-center" style={{background:`hsl(${142 + i * 20},30%,${18 + i * 3}%)`}}>
+                                    <div className="w-full h-44 flex items-center justify-center" style={{ background: `hsl(${142 + i * 20},30%,${18 + i * 3}%)` }}>
                                         <BookOpen className="h-10 w-10 text-white/30" />
                                     </div>
                                 )}
@@ -161,7 +185,7 @@ export default async function HomePage() {
                                 <div key={f.id} className="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-amber-500/30 bg-white/5 transition-all">
                                     {f.image
                                         ? <img src={f.image} alt={f.name} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
-                                        : <div className="w-full h-48 flex items-center justify-center" style={{background:`hsl(${142+i*20},25%,${15+i*3}%)`}}><BookOpen className="h-8 w-8 text-white/20" /></div>
+                                        : <div className="w-full h-48 flex items-center justify-center" style={{ background: `hsl(${142 + i * 20},25%,${15 + i * 3}%)` }}><BookOpen className="h-8 w-8 text-white/20" /></div>
                                     }
                                     <div className="p-5">
                                         <h3 className="font-bold text-white">{f.name}</h3>
@@ -172,7 +196,7 @@ export default async function HomePage() {
                         </div>
                     ) : (
                         <div className="grid grid-cols-3 gap-5 mt-10">
-                            {Array.from({length:6}).map((_,i)=>(
+                            {Array.from({ length: 6 }).map((_, i) => (
                                 <div key={i} className="h-48 rounded-2xl bg-white/5 animate-pulse" />
                             ))}
                         </div>
@@ -192,13 +216,13 @@ export default async function HomePage() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         {posts.map((p, i) => (
                             <Link key={p.id} href={`/berita/${p.slug}`} className={`group rounded-2xl overflow-hidden border border-stone-200 bg-white hover:shadow-xl transition-all ${i === 0 ? "md:col-span-2" : ""}`}>
-                                {p.thumbnail && <img src={p.thumbnail} alt={p.title} className={`w-full object-cover group-hover:scale-105 transition-transform duration-500 ${i===0?"h-64":"h-44"}`} />}
-                                {!p.thumbnail && <div className={`w-full bg-stone-100 flex items-center justify-center ${i===0?"h-64":"h-44"}`}><BookOpen className="h-8 w-8 text-stone-300"/></div>}
+                                {p.thumbnail && <img src={p.thumbnail} alt={p.title} className={`w-full object-cover group-hover:scale-105 transition-transform duration-500 ${i === 0 ? "h-64" : "h-44"}`} />}
+                                {!p.thumbnail && <div className={`w-full bg-stone-100 flex items-center justify-center ${i === 0 ? "h-64" : "h-44"}`}><BookOpen className="h-8 w-8 text-stone-300" /></div>}
                                 <div className="p-5">
                                     {p.category && <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">{catLabel[p.category]}</span>}
-                                    <h3 className={`font-bold text-[#0a2a1a] mt-1 line-clamp-2 group-hover:text-amber-700 transition-colors ${i===0?"text-lg":"text-base"}`}>{p.title}</h3>
+                                    <h3 className={`font-bold text-[#0a2a1a] mt-1 line-clamp-2 group-hover:text-amber-700 transition-colors ${i === 0 ? "text-lg" : "text-base"}`}>{p.title}</h3>
                                     {p.excerpt && <p className="text-sm text-stone-500 mt-1.5 line-clamp-2">{p.excerpt}</p>}
-                                    {p.publishedAt && <p className="text-xs text-stone-400 mt-3 flex items-center gap-1"><CalendarDays className="h-3 w-3"/>{fmt(p.publishedAt)}</p>}
+                                    {p.publishedAt && <p className="text-xs text-stone-400 mt-3 flex items-center gap-1"><CalendarDays className="h-3 w-3" />{fmt(p.publishedAt)}</p>}
                                 </div>
                             </Link>
                         ))}
@@ -234,7 +258,7 @@ export default async function HomePage() {
 
             {/* ── CTA PPDB ──────────────────────────────────────────────── */}
             <section className="py-24 bg-[#0a2a1a] relative overflow-hidden">
-                <div className="absolute inset-0 opacity-5" style={{backgroundImage:"repeating-linear-gradient(45deg,#d4a017 0,#d4a017 1px,transparent 0,transparent 50%)",backgroundSize:"20px 20px"}} />
+                <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "repeating-linear-gradient(45deg,#d4a017 0,#d4a017 1px,transparent 0,transparent 50%)", backgroundSize: "20px 20px" }} />
                 <div className="relative max-w-2xl mx-auto px-4 sm:px-6 text-center space-y-6">
                     <p className="text-amber-400 text-xs font-bold uppercase tracking-widest">Penerimaan Peserta Didik Baru</p>
                     <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight">
