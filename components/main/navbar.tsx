@@ -27,7 +27,7 @@ export function Navbar() {
     return (
         <header className={cn(
             "fixed top-0 inset-x-0 z-50 transition-all duration-300",
-            scrolled ? "bg-[#0a2a1a]/95 backdrop-blur-md shadow-lg shadow-black/20" : "bg-transparent"
+            scrolled ? "bg-secondary/95 backdrop-blur-md shadow-lg shadow-black/20" : "bg-transparent"
         )}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
                 <Link href="/" className="flex items-center gap-2.5 shrink-0">
@@ -37,13 +37,13 @@ export function Navbar() {
                 {/* Desktop nav */}
                 <nav className="hidden md:flex items-center gap-7">
                     {NAV_LINKS.map((l) => (
-                        <a key={l.href} href={l.href} className="text-sm font-medium text-white/80 hover:text-amber-400 transition-colors">
+                        <a key={l.href} href={l.href} className="text-sm font-medium text-white/80 hover:text-primary transition-colors">
                             {l.label}
                         </a>
                     ))}
                 </nav>
 
-                <Link href="/ppdb/form" className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500 hover:bg-amber-400 text-[#0a2a1a] text-sm font-bold transition-all active:scale-95">
+                <Link href="/ppdb/form" className="hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-bold transition-all active:scale-95">
                     Daftar PPDB
                 </Link>
 
@@ -55,13 +55,13 @@ export function Navbar() {
 
             {/* Mobile drawer */}
             {open && (
-                <div className="md:hidden bg-[#0a2a1a]/98 backdrop-blur-md border-t border-white/10 px-4 pt-4 pb-6 space-y-3">
+                <div className="md:hidden bg-secondary/98 backdrop-blur-md border-t border-white/10 px-4 pt-4 pb-6 space-y-3">
                     {NAV_LINKS.map((l) => (
-                        <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="block py-2 text-white/80 hover:text-amber-400 font-medium transition-colors">
+                        <a key={l.href} href={l.href} onClick={() => setOpen(false)} className="block py-2 text-white/80 hover:text-primary font-medium transition-colors">
                             {l.label}
                         </a>
                     ))}
-                    <Link href="/ppdb/form" onClick={() => setOpen(false)} className="mt-2 flex items-center justify-center px-4 py-2.5 rounded-full bg-amber-500 text-[#0a2a1a] font-bold text-sm">
+                    <Link href="/ppdb/form" onClick={() => setOpen(false)} className="mt-2 flex items-center justify-center px-4 py-2.5 rounded-full bg-primary text-primary-foreground font-bold text-sm">
                         Daftar PPDB Sekarang
                     </Link>
                 </div>

@@ -30,7 +30,7 @@ export default async function HomePage() {
     const catLabel: Record<string, string> = { BERITA: "Berita", ARTIKEL: "Artikel", INFORMASI: "Informasi" };
 
     return (
-        <div className="bg-[#f8f7f2] text-[#1a1a1a] font-sans">
+        <div className="bg-muted text-foreground font-sans">
             <Navbar />
 
             <div className="relative isolate px-6 pt-14 lg:px-8 h-svh flex items-center">
@@ -98,7 +98,7 @@ export default async function HomePage() {
             </div>
 
             {/* ── STATS ─────────────────────────────────────────────────── */}
-            <section id="tentang" className="bg-[#0a2a1a] py-14">
+            <section id="tentang" className="bg-secondary py-14">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-6">
                     {[
                         { icon: Users, val: `${totalStudents}+`, label: "Total Pendaftar" },
@@ -106,8 +106,8 @@ export default async function HomePage() {
                         { icon: GraduationCap, val: "100%", label: "Kelulusan" },
                         { icon: Award, val: "50+", label: "Prestasi" },
                     ].map(({ icon: Icon, val, label }) => (
-                        <div key={label} className="flex flex-col items-center text-center gap-2 p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-amber-500/20 transition-colors">
-                            <div className="h-10 w-10 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400">
+                        <div key={label} className="flex flex-col items-center text-center gap-2 p-6 rounded-2xl bg-white/5 border border-white/5 hover:border-primary/20 transition-colors">
+                            <div className="h-10 w-10 rounded-xl bg-primary/15 flex items-center justify-center text-primary">
                                 <Icon className="h-5 w-5" />
                             </div>
                             <p className="text-3xl font-black text-white">{val}</p>
@@ -119,16 +119,16 @@ export default async function HomePage() {
 
             {/* ── PPDB BANNER ───────────────────────────────────────────── */}
             {activeBatch && (
-                <section className="bg-gradient-to-r from-amber-500 to-amber-400 py-5">
+                <section className="bg-gradient-to-r from-primary to-primary/90 py-5">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div className="flex items-center gap-3">
-                            <span className="h-2.5 w-2.5 rounded-full bg-[#0a2a1a] animate-pulse inline-block shrink-0" />
-                            <p className="text-[#0a2a1a] font-bold text-sm">
+                            <span className="h-2.5 w-2.5 rounded-full bg-secondary animate-pulse inline-block shrink-0" />
+                            <p className="text-secondary-foreground font-bold text-sm">
                                 Pendaftaran {activeBatch.name} Jalur {activeBatch.jalur} Sedang Dibuka
                                 {activeBatch.endDate && <span className="font-normal"> · Tutup {fmt(activeBatch.endDate)}</span>}
                             </p>
                         </div>
-                        <Link href="/ppdb/form" className="shrink-0 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-[#0a2a1a] text-amber-400 font-bold text-sm hover:bg-[#0d3520] transition-colors">
+                        <Link href="/ppdb/form" className="shrink-0 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-secondary text-primary font-bold text-sm hover:bg-secondary/80 transition-colors">
                             Daftar Sekarang <ChevronRight className="h-4 w-4" />
                         </Link>
                     </div>
@@ -141,7 +141,7 @@ export default async function HomePage() {
                 {unggulan.length > 0 ? (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
                         {unggulan.map((p, i) => (
-                            <div key={p.id} className="group relative overflow-hidden rounded-2xl border border-stone-200 bg-white hover:border-[#0a2a1a]/20 hover:shadow-xl transition-all duration-300">
+                            <div key={p.id} className="group relative overflow-hidden rounded-2xl border border-stone-200 bg-white hover:border-secondary/20 hover:shadow-xl transition-all duration-300">
                                 {p.image && <img src={p.image} alt={p.name} className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500" />}
                                 {!p.image && (
                                     <div className="w-full h-44 flex items-center justify-center" style={{ background: `hsl(${142 + i * 20},30%,${18 + i * 3}%)` }}>
@@ -149,8 +149,8 @@ export default async function HomePage() {
                                     </div>
                                 )}
                                 <div className="p-5">
-                                    <p className="text-xs font-bold text-amber-600 uppercase tracking-wider mb-1">Program Unggulan</p>
-                                    <h3 className="font-bold text-base text-[#0a2a1a]">{p.name}</h3>
+                                    <p className="text-xs font-bold text-primary uppercase tracking-wider mb-1">Program Unggulan</p>
+                                    <h3 className="font-bold text-base text-secondary">{p.name}</h3>
                                     {p.description && <p className="text-sm text-stone-500 mt-1.5 line-clamp-2">{p.description}</p>}
                                 </div>
                             </div>
@@ -163,11 +163,11 @@ export default async function HomePage() {
                 {/* Extracurricular */}
                 {extracurriculars.length > 0 && (
                     <div className="mt-16">
-                        <h3 className="text-lg font-bold text-[#0a2a1a] mb-6">Ekstrakurikuler</h3>
+                        <h3 className="text-lg font-bold text-secondary mb-6">Ekstrakurikuler</h3>
                         <div className="flex flex-wrap gap-3">
                             {extracurriculars.map(p => (
-                                <span key={p.id} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#0a2a1a]/5 border border-[#0a2a1a]/10 text-[#0a2a1a] text-sm font-medium hover:bg-amber-50 hover:border-amber-300 transition-colors">
-                                    <CheckCircle className="h-3.5 w-3.5 text-amber-500" /> {p.name}
+                                <span key={p.id} className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/5 border border-secondary/10 text-secondary text-sm font-medium hover:bg-primary/10 hover:border-primary/30 transition-colors">
+                                    <CheckCircle className="h-3.5 w-3.5 text-primary" /> {p.name}
                                 </span>
                             ))}
                         </div>
@@ -176,13 +176,13 @@ export default async function HomePage() {
             </section>
 
             {/* ── FASILITAS ─────────────────────────────────────────────── */}
-            <section id="fasilitas" className="py-20 bg-[#0a2a1a]">
+            <section id="fasilitas" className="py-20 bg-secondary">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <SectionHead eyebrow="Infrastruktur" title="Fasilitas Sekolah" light />
                     {facilities.length > 0 ? (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-10">
                             {facilities.map((f, i) => (
-                                <div key={f.id} className="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-amber-500/30 bg-white/5 transition-all">
+                                <div key={f.id} className="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-primary/30 bg-white/5 transition-all">
                                     {f.image
                                         ? <img src={f.image} alt={f.name} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500" />
                                         : <div className="w-full h-48 flex items-center justify-center" style={{ background: `hsl(${142 + i * 20},25%,${15 + i * 3}%)` }}><BookOpen className="h-8 w-8 text-white/20" /></div>
@@ -208,7 +208,7 @@ export default async function HomePage() {
             <section id="berita" className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-end justify-between mb-10">
                     <SectionHead eyebrow="Informasi Terkini" title="Berita & Artikel" />
-                    <Link href="/berita" className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-[#0a2a1a] hover:text-amber-600 transition-colors">
+                    <Link href="/berita" className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold text-secondary hover:text-primary transition-colors">
                         Lihat semua <ArrowRight className="h-4 w-4" />
                     </Link>
                 </div>
@@ -219,8 +219,8 @@ export default async function HomePage() {
                                 {p.thumbnail && <img src={p.thumbnail} alt={p.title} className={`w-full object-cover group-hover:scale-105 transition-transform duration-500 ${i === 0 ? "h-64" : "h-44"}`} />}
                                 {!p.thumbnail && <div className={`w-full bg-stone-100 flex items-center justify-center ${i === 0 ? "h-64" : "h-44"}`}><BookOpen className="h-8 w-8 text-stone-300" /></div>}
                                 <div className="p-5">
-                                    {p.category && <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">{catLabel[p.category]}</span>}
-                                    <h3 className={`font-bold text-[#0a2a1a] mt-1 line-clamp-2 group-hover:text-amber-700 transition-colors ${i === 0 ? "text-lg" : "text-base"}`}>{p.title}</h3>
+                                    {p.category && <span className="text-xs font-bold text-primary uppercase tracking-wider">{catLabel[p.category]}</span>}
+                                    <h3 className={`font-bold text-secondary mt-1 line-clamp-2 group-hover:text-primary transition-colors ${i === 0 ? "text-lg" : "text-base"}`}>{p.title}</h3>
                                     {p.excerpt && <p className="text-sm text-stone-500 mt-1.5 line-clamp-2">{p.excerpt}</p>}
                                     {p.publishedAt && <p className="text-xs text-stone-400 mt-3 flex items-center gap-1"><CalendarDays className="h-3 w-3" />{fmt(p.publishedAt)}</p>}
                                 </div>
@@ -242,7 +242,7 @@ export default async function HomePage() {
                         <div className="mt-10 space-y-3">
                             {faqs.map((f) => (
                                 <details key={f.id} className="group rounded-xl border border-stone-200 bg-white overflow-hidden">
-                                    <summary className="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer font-semibold text-[#0a2a1a] text-sm select-none list-none">
+                                    <summary className="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer font-semibold text-secondary text-sm select-none list-none">
                                         {f.question}
                                         <ChevronDown className="h-4 w-4 text-stone-400 shrink-0 group-open:rotate-180 transition-transform" />
                                     </summary>
@@ -257,10 +257,10 @@ export default async function HomePage() {
             )}
 
             {/* ── CTA PPDB ──────────────────────────────────────────────── */}
-            <section className="py-24 bg-[#0a2a1a] relative overflow-hidden">
-                <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "repeating-linear-gradient(45deg,#d4a017 0,#d4a017 1px,transparent 0,transparent 50%)", backgroundSize: "20px 20px" }} />
+            <section className="py-24 bg-secondary relative overflow-hidden">
+                <div className="absolute inset-0 opacity-5" style={{ backgroundImage: "repeating-linear-gradient(45deg,var(--primary) 0,var(--primary) 1px,transparent 0,transparent 50%)", backgroundSize: "20px 20px" }} />
                 <div className="relative max-w-2xl mx-auto px-4 sm:px-6 text-center space-y-6">
-                    <p className="text-amber-400 text-xs font-bold uppercase tracking-widest">Penerimaan Peserta Didik Baru</p>
+                    <p className="text-primary text-xs font-bold uppercase tracking-widest">Penerimaan Peserta Didik Baru</p>
                     <h2 className="text-3xl sm:text-4xl font-black text-white leading-tight">
                         Daftarkan Putra-Putri Anda<br />Sekarang
                     </h2>
@@ -268,7 +268,7 @@ export default async function HomePage() {
                         Jadikan anak Anda bagian dari keluarga besar SMPU Hamzanwadi — unggul di akademik, kuat di karakter.
                     </p>
                     <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
-                        <Link href="/ppdb/form" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-amber-500 hover:bg-amber-400 text-[#0a2a1a] font-bold transition-all active:scale-95 shadow-lg shadow-amber-500/20">
+                        <Link href="/ppdb/form" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-bold transition-all active:scale-95 shadow-lg shadow-primary/30">
                             Isi Formulir Pendaftaran <ArrowRight className="h-4 w-4" />
                         </Link>
                         <Link href="/ppdb/info" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full border border-white/20 text-white font-semibold hover:border-white/40 transition-all text-sm">
@@ -295,8 +295,8 @@ export default async function HomePage() {
 function SectionHead({ eyebrow, title, light, center }: { eyebrow: string; title: string; light?: boolean; center?: boolean }) {
     return (
         <div className={center ? "text-center" : ""}>
-            <p className={`text-xs font-bold uppercase tracking-widest mb-2 ${light ? "text-amber-400" : "text-amber-600"}`}>{eyebrow}</p>
-            <h2 className={`text-2xl sm:text-3xl font-black leading-tight ${light ? "text-white" : "text-[#0a2a1a]"}`}>{title}</h2>
+            <p className={`text-xs font-bold uppercase tracking-widest mb-2 ${light ? "text-primary" : "text-primary"}`}>{eyebrow}</p>
+            <h2 className={`text-2xl sm:text-3xl font-black leading-tight ${light ? "text-white" : "text-secondary"}`}>{title}</h2>
         </div>
     );
 }

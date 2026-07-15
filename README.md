@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# SMP Unggulan Hamzanwadi — Web App
 
-## Getting Started
+Website resmi SMP Unggulan Hamzanwadi Lombok Timur, NTB. Dibangun dengan [Next.js](https://nextjs.org).
 
-First, run the development server:
+## Tech Stack
+
+- **Framework:** Next.js 16 + React 19
+- **Database:** PostgreSQL + Prisma
+- **Styling:** TailwindCSS 4 + Shadcn UI
+- **Validation:** Zod + React Hook Form
+- **File Upload:** AWS S3 via `@aws-sdk/client-s3`
+
+## Tema Warna
+
+Warna tema didefinisikan di `app/globals.css` sebagai CSS variables untuk light (`:root`) dan dark (`.dark`) mode.
+
+| Variable | Warna | Nilai | Penggunaan |
+|---|---|---|---|
+| `--primary` | **Gold** | `oklch(0.8119 0.1696 77.4)` | Tombol CTA, badge, ikon aksen, hover state, teks aksen keemasan |
+| `--secondary` | **Teal Gelap** | `oklch(0.3306 0.0787 157.04)` | Background gelap (navbar scroll, stats, fasilitas, CTA section, footer) |
+| `--primary-foreground` | Hitam pekat | `oklch(0.147 0 0)` | Teks di atas background gold |
+| `--secondary-foreground` | Putih | `oklch(0.985 0 0)` | Teks di atas background teal |
+
+### Aturan Pewarnaan
+
+1. **Gunakan CSS variables, bukan hardcoded hex.** Contoh:
+   - ✅ `bg-primary` / `text-primary` / `hover:text-primary`
+   - ✅ `bg-secondary` / `text-secondary-foreground`
+   - ❌ `bg-amber-500` / `text-amber-600` / `hover:text-amber-400`
+   - ❌ `bg-[#0a2a1a]` / `text-[#d4a017]` / `bg-[#061a0f]`
+
+2. **Primary untuk aksen emas/gold** — tombol utama, label badge, ikon, hover links, dekorasi.
+
+3. **Secondary untuk background gelap** — section yang butuh latar dark teal (navbar sticky, stats bar, fasilitas, CTA banner, footer).
+
+4. **Opacity variants** bebas dipakai: `bg-primary/90`, `bg-secondary/80`, `border-primary/30`, `hover:bg-primary/20`, dll.
+
+5. **Jangan gunakan `amber-*`** — semua warna gold/amber harus melalui `primary` agar konsisten.
+
+6. **Warna netral** (`muted`, `muted-foreground`, `border`, `accent`) tetap aman dipakai untuk elemen non-aksen seperti teks deskripsi, card border, skeleton loading.
+
+## Perintah `rtk`
+
+Semua shell command harus diawali `rtk` untuk menghemat token:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+rtk git status
+rtk npm run dev
+rtk ls src/
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Halaman
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Main/Public** → `app/(main)/...`
+- **Admin** → `app/admin/...`
+- Semua halaman **dynamic** kecuali `/` (static root)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Server Components
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Gunakan Server Components secara default. Client component hanya ketika diperlukan (interaktivitas, hooks, event handlers).
