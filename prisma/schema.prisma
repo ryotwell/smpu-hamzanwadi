@@ -20,3 +20,233 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model Parent {
+  id              Int      @id @default(autoincrement())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  fatherName      String
+  fatherEducation String
+  fatherJob       String
+  fatherIncome    String
+
+  motherName      String
+  motherEducation String
+  motherJob       String
+  motherIncome    String
+
+  waliName        String
+  waliPhone       String
+  waliEmail       String
+  waliAlamat      String
+
+  student         Student? @relation("ParentStudent")
+}
+
+model File {
+  id            Int      @id @default(autoincrement())
+
+  photo         String
+  kartuKeluarga String
+  aktaKelahiran String
+  ijazahSKL     String
+  prestasi      String?
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  student       Student? @relation("StudentFile")
+}
+
+model Student {
+  id                    String           @id @default(uuid())
+  kodePendaftaran       String           @unique
+  noUrutPendaftaran     Int
+  createdAt             DateTime         @default(now())
+  updatedAt             DateTime         @updatedAt
+
+  fullName              String
+  nisn                  String?          @unique
+  nik                   String           @unique
+  tempatLahir           String
+  tanggalLahir          String
+  gender                Gender
+  agama                 Religion
+  keadaanOrtu           KeadaanOrtu
+  statusKeluarga        FamilyStatus
+  anakKe                Int?
+  dariBersaudara        Int?
+  tinggalBersama        TinggalBersama
+  bloodType             BloodType?
+  beratKg               Int?
+  tinggiCm              Int?
+  riwayatPenyakit       String?
+  asalSekolah           String
+  kewarganegaraan       Kewarganegaraan
+  alamatJalan           String?
+  rt                    String?
+  rw                    String?
+  desaKelurahan         String
+  kecamatan             String
+  kabupaten             String
+  provinsi              String
+  kodePos               String
+  phone                 String
+  email                 String?
+
+  isAccepted            Boolean          @default(false)
+
+  parentId              Int              @unique
+  parent                Parent           @relation("ParentStudent", fields: [parentId], references: [id])
+
+  fileId                Int              @unique
+  file                  File             @relation("StudentFile", fields: [fileId], references: [id])
+
+  batchId               Int
+  batch                 Batch            @relation(fields: [batchId], references: [id])
+}
+
+model Post {
+  id          Int           @id @default(autoincrement())
+  title       String
+  slug        String        @unique
+  thumbnail   String?
+  description String?
+  content     String
+  excerpt     String?
+  published   Boolean
+  publishedAt DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  category    PostCategory?
+}
+
+model Facility {
+  id          Int      @id @default(autoincrement())
+  name        String
+  image       String?
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Curriculum {
+  id          Int                 @id @default(autoincrement())
+  name        String
+  image       String?
+  category    CurriculumCategory
+  description String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+}
+
+model Batch {
+  id                Int      @id @default(autoincrement())
+  name              String
+  whatsappGroupLink String?
+  jalur             JalurPendaftaran
+  isActive          Boolean? @default(false)
+  startDate         DateTime?
+  endDate           DateTime?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  students          Student[]
+}
+
+model Requirement {
+  id          Int      @id @default(autoincrement())
+  description String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Faq {
+  id        Int      @id @default(autoincrement())
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum BloodType {
+  A
+  B
+  AB
+  O
+  UNKNOWN
+}
+
+enum TinggalBersama {
+  ORANG_TUA
+  KAKEK_NENEK
+  PAMAN_BIBI
+  SAUDARA_KANDUNG
+  KERABAT
+  PANTI_PONTREN
+  LAINNYA
+}
+
+enum FamilyStatus {
+  ANAK_KANDUNG
+  ANAK_TIRI
+  ANAK_ANGKAT
+}
+
+enum KeadaanOrtu {
+  LENGKAP
+  YATIM
+  PIATU
+  YATIM_PIATU
+}
+
+enum Religion {
+  ISLAM
+  CHRISTIAN
+  CATHOLIC
+  HINDU
+  BUDDHA
+  KONGHUCU
+}
+
+enum PostCategory {
+  BERITA
+  ARTIKEL
+  INFORMASI
+}
+
+enum CurriculumCategory {
+  EXTRACURRICULAR
+  PROGRAM_UNGGULAN
+  KO_CULLICULAR
+}
+
+enum JalurPendaftaran {
+  UMUM
+  PRESTASI
+}
+
+enum Kewarganegaraan {
+  WNI
+  WNA
+}
+
+model Criteria {
+  id        Int          @id @default(autoincrement())
+  name      String
+  weight    Float
+  type      CriteriaType
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+enum CriteriaType {
+  BENEFIT
+  COST
+}

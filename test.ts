@@ -1,0 +1,116 @@
+// contoh
+const users = [
+    {
+        name: "Zulzario Zaeri",
+        hasil_test: {
+            rataRaport: 80.8,
+            test_bahasa_inggris: 70.5,
+            karakter: 38.5,
+        }
+    },
+    {
+        name: "Devin Kusuma",
+        hasil_test: {
+            rataRaport: 80,
+            test_bahasa_inggris: 90,
+            karakter: 70,
+        }
+    },
+    {
+        name: "Putri Wulandari",
+        hasil_test: {
+            rataRaport: 90,
+            test_bahasa_inggris: 80,
+            karakter: 50,
+        }
+    }
+]
+
+// SAW
+// 1. Menentukan bobot untuk setiap kriteria
+
+// const bobot = {
+//     rataRaport: 0.35,
+//     test_bahasa_inggris: 0.25,
+//     karakter: 0.4,
+// }
+
+
+const bobot = {
+    rataRaport: 4,
+    test_bahasa_inggris: 6,
+    karakter: 5,
+}
+
+// normalisasi bobot
+const jumlahBobot = bobot.rataRaport + bobot.test_bahasa_inggris + bobot.karakter
+
+const normalisasiBobot = {
+    rataRaport: bobot.rataRaport / jumlahBobot,
+    test_bahasa_inggris: bobot.test_bahasa_inggris / jumlahBobot,
+    karakter: bobot.karakter / jumlahBobot,
+}
+
+const normalisasiBobotTotal = Object.values(normalisasiBobot).reduce((acc, val) => acc + val, 0)
+
+console.log({ normalisasiBobot: Math.round(normalisasiBobotTotal) });
+
+// 2. Menentukan pembagi untuk setiap kriteria
+const rataRaportPembagi = users.reduce((acc, user) => Math.max(acc, user.hasil_test.rataRaport), 0)
+const testBahasaInggrisPembagi = users.reduce((acc, user) => Math.max(acc, user.hasil_test.test_bahasa_inggris), 0)
+const karakterPembagi = users.reduce((acc, user) => Math.max(acc, user.hasil_test.karakter), 0)
+
+const pembagi = {
+    rataRaport: rataRaportPembagi,
+    test_bahasa_inggris: testBahasaInggrisPembagi,
+    karakter: karakterPembagi,
+}
+
+console.log({ pembagi });
+
+
+const normalisasiData = users.map((user) => {
+    const normalisasiData = {
+        ...user,
+        hasil_test: {
+            rataRaport: user.hasil_test.rataRaport / pembagi.rataRaport,
+            test_bahasa_inggris: user.hasil_test.test_bahasa_inggris / pembagi.test_bahasa_inggris,
+            karakter: user.hasil_test.karakter / pembagi.karakter,
+        }
+    }
+
+    return normalisasiData
+})
+
+console.log({ normalisasiData });
+
+// ranking
+const usersRanking = normalisasiData.map((user) => {
+    const ranking = {
+        rataRaport: (normalisasiBobot.rataRaport * user.hasil_test.rataRaport),
+        test_bahasa_inggris: (normalisasiBobot.test_bahasa_inggris * user.hasil_test.test_bahasa_inggris),
+        karakter: (normalisasiBobot.karakter * user.hasil_test.karakter),
+    }
+
+    return {
+        ...user,
+        total: ranking.rataRaport + ranking.test_bahasa_inggris + ranking.karakter
+    }
+}).sort((a, b) => b.total - a.total)
+
+console.log(usersRanking.map((user, index) => {
+    return `${index + 1}. ${user.name} - ${user.total}`
+}).join("\n"));
+
+
+// // 2. Menentukan bobot untuk setiap kriteria
+// const nilaiBobot = {
+//     rataRaport: user.hasil_test.rataRaport * bobot.rataRaport,
+//     test_bahasa_inggris: user.hasil_test.test_bahasa_inggris * bobot.test_bahasa_inggris,
+//     karakter: user.hasil_test.karakter * bobot.karakter,
+// }
+
+// // 3. Menentukan bobot untuk setiap kriteria
+// const nilaiTotal = nilaiBobot.rataRaport + nilaiBobot.test_bahasa_inggris + nilaiBobot.karakter
+
+// console.log(nilaiTotal)
