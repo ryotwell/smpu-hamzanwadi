@@ -26,7 +26,8 @@ services:
     env_file:
       - .env
     networks:
-      - smpu-network
+      - dokploy-network
+      - default
 
 networks:
   smpu-network:
