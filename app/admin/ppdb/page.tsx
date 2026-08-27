@@ -1,100 +1,220 @@
-import { FC } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { prisma } from "@/lib/prisma";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, MoreHorizontal, FileCheck, XCircle, Clock } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  Search,
+  FileCheck,
+  XCircle,
+  Clock,
+  MoreHorizontal,
+  Download,
+  Eye,
+  Trash2,
+} from "lucide-react";
 
-const applicants = [
-  { id: "P-26001", name: "Faisal Rahman", school: "SDN 1 Selong", score: 85.5, status: "Menunggu" },
-  { id: "P-26002", name: "Gita Savitri", school: "SDN 2 Pancor", score: 92.0, status: "Diterima" },
-  { id: "P-26003", name: "Hasan Basri", school: "MI NW Pancor", score: 78.5, status: "Ditolak" },
-  { id: "P-26004", name: "Indah Permatasari", school: "SDN 3 Selong", score: 88.0, status: "Diterima" },
-  { id: "P-26005", name: "Joko Anwar", school: "SDN 1 Masbagik", score: 75.0, status: "Menunggu" },
-];
+const statusConfig = {
+  diterima: { label: "Diterima", variant: "default" as const, icon: FileCheck },
+  menunggu: { label: "Menunggu", variant: "outline" as const, icon: Clock },
+  ditolak: { label: "Ditolak", variant: "destructive" as const, icon: XCircle },
+} as const;
 
-export default function PPDBPage() {
+type StatusKey = keyof typeof statusConfig;
+
+interface PPDBPageProps {
+  searchParams: Promise<{ q?: string }>;
+}
+
+export default async function PPDBPage({ searchParams }: PPDBPageProps) {
+  const { q = "" } = await searchParams;
+  const search = q.trim();
+
+  const students = await prisma.student.findMany({
+    where: search
+      ? {
+          OR: [
+            { fullName: { contains: search, mode: "insensitive" } },
+            { kodePendaftaran: { contains: search, mode: "insensitive" } },
+            { asalSekolah: { contains: search, mode: "insensitive" } },
+          ],
+        }
+      : {},
+    orderBy: { createdAt: "desc" },
+    select: {
+      id: true,
+      kodePendaftaran: true,
+      fullName: true,
+      asalSekolah: true,
+      isAccepted: true,
+    },
+  });
+
+  // Mapping status – hanya dua kemungkinan karena isAccepted boolean
+  const applicants = students.map((s) => ({
+    ...s,
+    status: (s.isAccepted ? "diterima" : "menunggu") as StatusKey,
+  }));
+
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Data Pendaftar PPDB</h2>
-          <p className="text-muted-foreground">Kelola daftar calon siswa baru Gelombang 1.</p>
+          <h1 className="text-2xl font-bold tracking-tight">Data Pendaftar PPDB</h1>
+          <p className="text-muted-foreground">Kelola daftar calon siswa baru.</p>
         </div>
         <div className="flex gap-2">
-            <Button variant="outline">
-               Export Data
-            </Button>
-            <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
-                Proses Seleksi (SAW)
-            </Button>
+          <Button variant="outline">
+            <Download className="mr-2 h-4 w-4" />
+            Export Data
+          </Button>
+          <Button>Proses Seleksi (SAW)</Button>
         </div>
       </div>
 
-      <Card className="shadow-sm border-0 ring-1 ring-border/50">
-        <CardHeader className="flex flex-row items-center justify-between pb-2 border-b">
-          <div className="relative w-full max-w-sm">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Cari nama atau nomor pendaftaran..."
-              className="w-full bg-background pl-9"
-            />
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div>
+              <CardTitle>Pendaftar</CardTitle>
+              <CardDescription>
+                {search
+                  ? `Menemukan ${applicants.length} hasil untuk "${search}"`
+                  : `${applicants.length} calon siswa terdaftar.`}
+                {search && (
+                  <a
+                    href="/admin/ppdb"
+                    className="ml-2 text-xs text-primary hover:underline"
+                  >
+                    Hapus filter
+                  </a>
+                )}
+              </CardDescription>
+            </div>
+            {/* PERBAIKAN: value → defaultValue */}
+            <form className="relative w-full sm:w-72" method="GET">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Input
+                type="search"
+                name="q"
+                defaultValue={search}
+                placeholder="Cari nama atau nomor pendaftaran..."
+                className="w-full bg-background pl-9"
+                autoComplete="off"
+              />
+            </form>
           </div>
         </CardHeader>
         <CardContent className="p-0">
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs text-muted-foreground uppercase bg-muted/50">
-                <tr>
-                  <th className="px-6 py-3 font-medium">Calon Siswa</th>
-                  <th className="px-6 py-3 font-medium">No. Daftar</th>
-                  <th className="px-6 py-3 font-medium">Asal Sekolah</th>
-                  <th className="px-6 py-3 font-medium">Skor SAW</th>
-                  <th className="px-6 py-3 font-medium">Status</th>
-                  <th className="px-6 py-3 text-right font-medium">Aksi</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y">
-                {applicants.map((applicant) => (
-                  <tr key={applicant.id} className="bg-background hover:bg-muted/50">
-                    <td className="px-6 py-4 font-medium flex items-center gap-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={`https://i.pravatar.cc/150?u=${applicant.id}`} />
-                        <AvatarFallback>{applicant.name.charAt(0)}</AvatarFallback>
-                      </Avatar>
-                      {applicant.name}
-                    </td>
-                    <td className="px-6 py-4">{applicant.id}</td>
-                    <td className="px-6 py-4">{applicant.school}</td>
-                    <td className="px-6 py-4 font-semibold text-indigo-600">{applicant.score}</td>
-                    <td className="px-6 py-4">
-                      {applicant.status === "Diterima" && (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
-                          <FileCheck className="w-3 h-3 mr-1" /> Diterima
-                        </span>
-                      )}
-                      {applicant.status === "Menunggu" && (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-700">
-                          <Clock className="w-3 h-3 mr-1" /> Menunggu
-                        </span>
-                      )}
-                      {applicant.status === "Ditolak" && (
-                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-rose-100 text-rose-700">
-                          <XCircle className="w-3 h-3 mr-1" /> Ditolak
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[280px]">Calon Siswa</TableHead>
+                <TableHead>No. Daftar</TableHead>
+                <TableHead>Asal Sekolah</TableHead>
+                <TableHead>Skor SAW</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right w-[60px]">Aksi</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {applicants.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                    Belum ada data pendaftar.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                applicants.map((applicant) => {
+                  const status = statusConfig[applicant.status];
+                  const StatusIcon = status.icon;
+                  return (
+                    <TableRow key={applicant.id}>
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <Avatar className="size-8">
+                            <AvatarFallback>
+                              {applicant.fullName.charAt(0)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="font-medium truncate">
+                            {applicant.fullName}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-muted-foreground font-mono text-xs">
+                        {applicant.kodePendaftaran}
+                      </TableCell>
+                      <TableCell className="text-muted-foreground">
+                        {applicant.asalSekolah}
+                      </TableCell>
+                      <TableCell className="font-semibold text-primary">
+                        —
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={status.variant}>
+                          <StatusIcon className="mr-1 h-3 w-3" />
+                          {status.label}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="size-8">
+                              <MoreHorizontal className="h-4 w-4" />
+                              <span className="sr-only">Buka menu</span>
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuGroup>
+                              <DropdownMenuItem>
+                                <Eye className="mr-2 h-4 w-4" />
+                                Detail
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                <FileCheck className="mr-2 h-4 w-4" />
+                                Verifikasi
+                              </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuGroup>
+                              <DropdownMenuItem variant="destructive">
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Hapus
+                              </DropdownMenuItem>
+                            </DropdownMenuGroup>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>

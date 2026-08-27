@@ -35,16 +35,6 @@ const items = [
     icon: LayoutDashboard,
   },
   {
-    title: "Data Siswa",
-    url: "/admin/siswa",
-    icon: Users,
-  },
-  {
-    title: "Data Guru",
-    url: "#",
-    icon: GraduationCap,
-  },
-  {
     title: "PPDB Online",
     url: "/admin/ppdb",
     icon: UserPlus,

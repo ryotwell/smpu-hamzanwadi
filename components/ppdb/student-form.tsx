@@ -2,7 +2,7 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import {
     PPDBSchema, PPDBFormValues,
@@ -121,14 +121,10 @@ function FileInput({ id, label, required, existingUrl, onChange }: {
     onChange: (f: File | null) => void;
 }) {
     const [fileName, setFileName] = useState<string | null>(existingUrl ? "File tersimpan" : null);
-    const inputRef = useRef<HTMLInputElement>(null);
 
     return (
         <Field id={id} label={label} required={required}>
-            <div
-                className="flex items-center gap-3 p-3 rounded-md border border-dashed border-input hover:border-primary/60 cursor-pointer transition-colors"
-                onClick={() => inputRef.current?.click()}
-            >
+            <div className="relative flex items-center gap-3 p-3 rounded-md border border-dashed border-input hover:border-primary/60 transition-colors">
                 <Upload className="h-4 w-4 shrink-0 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground truncate">
                     {fileName ?? "Klik untuk memilih file"}
@@ -144,19 +140,18 @@ function FileInput({ id, label, required, existingUrl, onChange }: {
                         Lihat
                     </a>
                 )}
+                <input
+                    id={id}
+                    type="file"
+                    className="absolute inset-0 size-full opacity-0 cursor-pointer"
+                    accept="image/*,application/pdf"
+                    onChange={(e) => {
+                        const f = e.target.files?.[0] ?? null;
+                        setFileName(f?.name ?? null);
+                        onChange(f);
+                    }}
+                />
             </div>
-            <input
-                ref={inputRef}
-                id={id}
-                type="file"
-                className="hidden"
-                accept="image/*,application/pdf"
-                onChange={(e) => {
-                    const f = e.target.files?.[0] ?? null;
-                    setFileName(f?.name ?? null);
-                    onChange(f);
-                }}
-            />
         </Field>
     );
 }
