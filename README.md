@@ -9,6 +9,49 @@ Website resmi SMP Unggulan Hamzanwadi Lombok Timur, NTB. Dibangun dengan [Next.j
 - **Styling:** TailwindCSS 4 + Shadcn UI
 - **Validation:** Zod + React Hook Form
 - **File Upload:** AWS S3 via `@aws-sdk/client-s3`
+- **Runtime:** Bun
+- **Container:** Docker
+
+## Quick Start with Docker
+
+### Prerequisites
+- Docker & Docker Compose
+- PostgreSQL database (hosted separately)
+
+### 1. Configure Environment
+Copy `.env.example` to `.env` and fill in your values:
+```bash
+cp .env.example .env
+# Edit .env with your database URL, S3 credentials, etc.
+```
+
+### 2. Build & Run
+```bash
+docker compose up -d --build
+```
+
+The app will be available at `http://localhost:3000`
+
+### 3. Run Migrations (first time only)
+```bash
+docker compose exec app bunx prisma migrate deploy
+```
+
+### Useful Commands
+```bash
+# View logs
+docker compose logs -f app
+
+# Stop
+docker compose down
+
+# Rebuild after code changes
+docker compose up -d --build
+
+# Run Prisma commands
+docker compose exec app bunx prisma studio
+docker compose exec app bunx prisma migrate dev
+```
 
 ## Tema Warna
 
