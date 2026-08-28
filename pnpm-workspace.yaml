@@ -4,7 +4,9 @@ ignoredBuiltDependencies:
   - unrs-resolver
 onlyBuiltDependencies:
   - '@prisma/engines'
-  - '['
-  - ']'
-  - esbuild
+  - '@prisma/client'
   - prisma
+  - esbuild
+  - sharp
+  - unrs-resolver
+  - msw
