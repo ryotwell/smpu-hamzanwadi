@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { StudentForm } from "@/components/ppdb/student-form";
 import { FileText, GraduationCap } from "lucide-react";
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
     title: "Formulir Pendaftaran PPDB | SMPU Hamzanwadi",
     description: "Isi formulir pendaftaran peserta didik baru SMPU Hamzanwadi secara online.",
