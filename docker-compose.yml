@@ -2,7 +2,6 @@ services:
   next-app:
     container_name: next-app
     build:
-      context: ./next-app
       dockerfile: Dockerfile
       args:
         - NODE_ENV=production
