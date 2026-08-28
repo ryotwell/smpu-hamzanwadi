@@ -1,3 +1,19 @@
+# Base image dengan Node.js 24 (Alpine)
+FROM node:24-alpine AS base
+
+# Stage: instalasi dependencies
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY package.json pnpm-lock.yaml* ./
+COPY prisma ./prisma/
+
+RUN pnpm install --frozen-lockfile --ignore-scripts --auto-approve-builds
+
+# Stage: build aplikasi
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -22,3 +38,29 @@ ENV NEXT_PUBLIC_SCHOOL_CONTACT_PHONE=$NEXT_PUBLIC_SCHOOL_CONTACT_PHONE
 ENV NEXT_PUBLIC_SCHOOL_CONTACT_MAP=$NEXT_PUBLIC_SCHOOL_CONTACT_MAP
 
 RUN pnpm run build
+
+# Stage: production runner
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Buat user non-root
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy hasil build
+COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/prisma ./prisma
+
+# Set user
+USER nextjs
+
+EXPOSE 3000
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+CMD ["node", "server.js"]
