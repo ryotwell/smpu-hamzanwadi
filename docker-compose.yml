@@ -2,6 +2,7 @@ services:
   next-app:
     container_name: next-app
     build:
+      context: .
       dockerfile: Dockerfile
       args:
         - NEXT_PUBLIC_SCHOOL_NPSN=${NEXT_PUBLIC_SCHOOL_NPSN}
@@ -24,3 +25,7 @@ services:
     networks:
       - dokploy-network
       - default
+
+networks:
+  dokploy-network:
+    external: true
