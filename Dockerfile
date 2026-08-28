@@ -14,7 +14,7 @@ COPY package.json pnpm-lock.yaml* ./
 COPY prisma ./prisma/
 
 # Install dependencies (skip scripts untuk menghindari interaksi)
-RUN pnpm install --frozen-lockfile --ignore-scripts
+RUN pnpm install --frozen-lockfile --ignore-scripts --auto-approve-builds
 
 # Stage: build aplikasi
 FROM base AS builder
@@ -26,10 +26,10 @@ COPY . .
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Rebuild semua binary package (esbuild, sharp, prisma, dll.) secara non-interaktif
-RUN pnpm rebuild
+RUN pnpm rebuild --auto-approve-builds
 
 # Generate Prisma client
-RUN pnpm prisma generate
+RUN pnpm prisma generate --auto-approve-builds
 
 # Build Next.js (Turbopack di production tidak digunakan, tetap pakai next build)
 ENV NEXT_TELEMETRY_DISABLED=1
