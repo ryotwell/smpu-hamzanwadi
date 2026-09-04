@@ -1,3 +1,4 @@
+// app/admin/ppdb/page.tsx
 import { prisma } from "@/lib/prisma";
 import {
   Table,
@@ -17,25 +18,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Search,
   FileCheck,
   XCircle,
   Clock,
-  MoreHorizontal,
-  Download,
-  Eye,
-  Trash2,
+  MapPin,
 } from "lucide-react";
+import Link from "next/link";
+import { RowActions } from "./row-actions";
 
 const statusConfig = {
   diterima: { label: "Diterima", variant: "default" as const, icon: FileCheck },
@@ -70,10 +62,15 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
       fullName: true,
       asalSekolah: true,
       isAccepted: true,
+      jarakRumahSekolah: true,
+      testBahasaInggris: true,
+      testKarakter: true,
+      testAkademik: true,
+      rataRataRaport: true,
+
     },
   });
 
-  // Mapping status – hanya dua kemungkinan karena isAccepted boolean
   const applicants = students.map((s) => ({
     ...s,
     status: (s.isAccepted ? "diterima" : "menunggu") as StatusKey,
@@ -86,12 +83,10 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
           <h1 className="text-2xl font-bold tracking-tight">Data Pendaftar PPDB</h1>
           <p className="text-muted-foreground">Kelola daftar calon siswa baru.</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <Download className="mr-2 h-4 w-4" />
-            Export Data
+        <div>
+          <Button asChild>
+            <Link href="/admin/ppdb/nilai">Input Nilai</Link>
           </Button>
-          <Button>Proses Seleksi (SAW)</Button>
         </div>
       </div>
 
@@ -105,16 +100,12 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
                   ? `Menemukan ${applicants.length} hasil untuk "${search}"`
                   : `${applicants.length} calon siswa terdaftar.`}
                 {search && (
-                  <a
-                    href="/admin/ppdb"
-                    className="ml-2 text-xs text-primary hover:underline"
-                  >
+                  <Link href="/admin/ppdb" className="ml-2 text-xs text-primary hover:underline">
                     Hapus filter
-                  </a>
+                  </Link>
                 )}
               </CardDescription>
             </div>
-            {/* PERBAIKAN: value → defaultValue */}
             <form className="relative w-full sm:w-72" method="GET">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
               <Input
@@ -135,7 +126,11 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
                 <TableHead className="w-[280px]">Calon Siswa</TableHead>
                 <TableHead>No. Daftar</TableHead>
                 <TableHead>Asal Sekolah</TableHead>
-                <TableHead>Skor SAW</TableHead>
+                <TableHead>Jarak (km)</TableHead>
+                <TableHead>Tes Inggris</TableHead>
+                <TableHead>Tes Karakter</TableHead>
+                <TableHead>Tes Akademik</TableHead>
+                <TableHead>Rata-rata Raport</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right w-[60px]">Aksi</TableHead>
               </TableRow>
@@ -143,7 +138,7 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
             <TableBody>
               {applicants.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                  <TableCell colSpan={10} className="h-24 text-center text-muted-foreground">
                     Belum ada data pendaftar.
                   </TableCell>
                 </TableRow>
@@ -171,8 +166,32 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
                       <TableCell className="text-muted-foreground">
                         {applicant.asalSekolah}
                       </TableCell>
+                      <TableCell>
+                        {applicant.jarakRumahSekolah ? (
+                          <div className="flex items-center gap-1">
+                            <MapPin className="h-3 w-3 text-muted-foreground" />
+                            <span>{applicant.jarakRumahSekolah}</span>
+                            {applicant.jarakRumahSekolah > 10 && (
+                              <Badge variant="outline" className="text-amber-600 text-[10px]">
+                                Jauh
+                              </Badge>
+                            )}
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground text-sm">-</span>
+                        )}
+                      </TableCell>
                       <TableCell className="font-semibold text-primary">
-                        —
+                        {applicant.testBahasaInggris ?? "—"}
+                      </TableCell>
+                      <TableCell className="font-semibold text-primary">
+                        {applicant.testKarakter ?? "—"}
+                      </TableCell>
+                      <TableCell className="font-semibold text-primary">
+                        {applicant.testAkademik ?? "—"}
+                      </TableCell>
+                      <TableCell className="font-semibold text-primary">
+                        {applicant.rataRataRaport ?? "—"}
                       </TableCell>
                       <TableCell>
                         <Badge variant={status.variant}>
@@ -181,33 +200,7 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="size-8">
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Buka menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuGroup>
-                              <DropdownMenuItem>
-                                <Eye className="mr-2 h-4 w-4" />
-                                Detail
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <FileCheck className="mr-2 h-4 w-4" />
-                                Verifikasi
-                              </DropdownMenuItem>
-                            </DropdownMenuGroup>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuGroup>
-                              <DropdownMenuItem variant="destructive">
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Hapus
-                              </DropdownMenuItem>
-                            </DropdownMenuGroup>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                        <RowActions id={applicant.id} />
                       </TableCell>
                     </TableRow>
                   );

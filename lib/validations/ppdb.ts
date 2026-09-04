@@ -94,6 +94,11 @@ export const PPDBSchema = z.object({
     phone: z.string().min(10, "Nomor HP minimal 10 digit"),
     email: z.string().email("Format email tidak valid").optional().nullable().or(z.literal("")),
 
+    rataRataRaport: z.number().min(0, "Nilai minimal 0").max(100, "Nilai maksimal 100").optional().nullable(),
+    jarakRumahSekolah: z.number().optional(),
+    alamatLengkap: z.string().optional(),
+
+
     fatherName: z.string().min(1, "Nama ayah wajib diisi"),
     fatherEducation: z.string().min(1, "Pendidikan ayah wajib diisi"),
     fatherJob: z.string().min(1, "Pekerjaan ayah wajib diisi"),

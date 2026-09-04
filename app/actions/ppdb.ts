@@ -44,7 +44,7 @@ export async function createStudentAction(formData: FormData): Promise<PPDBActio
         if (value instanceof File) continue;
 
         // Coerce numeric fields
-        const numericFields = ["batchId", "anakKe", "dariBersaudara", "beratKg", "tinggiCm"];
+        const numericFields = ["batchId", "anakKe", "dariBersaudara", "beratKg", "tinggiCm", "jarakRumahSekolah", "rataRataRaport"];
         if (numericFields.includes(key)) {
             const num = Number(value);
             raw[key] = value === "" ? null : isNaN(num) ? null : num;
@@ -151,6 +151,10 @@ export async function createStudentAction(formData: FormData): Promise<PPDBActio
                     kodePos: data.kodePos,
                     phone: data.phone,
                     email: data.email ?? null,
+                    // ── FIELD BARU ──
+                    jarakRumahSekolah: data.jarakRumahSekolah ?? null,
+                    alamatLengkap: data.alamatLengkap ?? null,
+                    rataRataRaport: data.rataRataRaport ?? null,
                     parentId: parentRecord.id,
                     fileId: fileRecord.id,
                     batchId: data.batchId,
@@ -175,7 +179,7 @@ export async function updateStudentAction(
     const raw: Record<string, unknown> = {};
     for (const [key, value] of formData.entries()) {
         if (value instanceof File) continue;
-        const numericFields = ["batchId", "anakKe", "dariBersaudara", "beratKg", "tinggiCm"];
+        const numericFields = ["batchId", "anakKe", "dariBersaudara", "beratKg", "tinggiCm", "jarakRumahSekolah", "rataRataRaport"];
         if (numericFields.includes(key)) {
             const num = Number(value);
             raw[key] = value === "" ? null : isNaN(num) ? null : num;
@@ -225,37 +229,68 @@ export async function updateStudentAction(
         await prisma.$transaction(async (tx) => {
             await tx.file.update({
                 where: { id: existing.fileId },
-                data: { photo: photoUrl, kartuKeluarga: kartuKeluargaUrl, aktaKelahiran: aktaKelahiranUrl, ijazahSKL: ijazahSKLUrl, prestasi: prestasiUrl },
+                data: {
+                    photo: photoUrl,
+                    kartuKeluarga: kartuKeluargaUrl,
+                    aktaKelahiran: aktaKelahiranUrl,
+                    ijazahSKL: ijazahSKLUrl,
+                    prestasi: prestasiUrl,
+                },
             });
 
             await tx.parent.update({
                 where: { id: existing.parentId },
                 data: {
-                    fatherName: data.fatherName, fatherEducation: data.fatherEducation,
-                    fatherJob: data.fatherJob, fatherIncome: data.fatherIncome,
-                    motherName: data.motherName, motherEducation: data.motherEducation,
-                    motherJob: data.motherJob, motherIncome: data.motherIncome,
-                    waliName: data.waliName, waliPhone: data.waliPhone,
-                    waliEmail: data.waliEmail, waliAlamat: data.waliAlamat,
+                    fatherName: data.fatherName,
+                    fatherEducation: data.fatherEducation,
+                    fatherJob: data.fatherJob,
+                    fatherIncome: data.fatherIncome,
+                    motherName: data.motherName,
+                    motherEducation: data.motherEducation,
+                    motherJob: data.motherJob,
+                    motherIncome: data.motherIncome,
+                    waliName: data.waliName,
+                    waliPhone: data.waliPhone,
+                    waliEmail: data.waliEmail,
+                    waliAlamat: data.waliAlamat,
                 },
             });
 
             await tx.student.update({
                 where: { id: studentId },
                 data: {
-                    fullName: data.fullName, nisn: data.nisn ?? null, nik: data.nik,
-                    tempatLahir: data.tempatLahir, tanggalLahir: data.tanggalLahir,
-                    gender: data.gender, agama: data.agama,
-                    keadaanOrtu: data.keadaanOrtu, statusKeluarga: data.statusKeluarga,
-                    anakKe: data.anakKe ?? null, dariBersaudara: data.dariBersaudara ?? null,
-                    tinggalBersama: data.tinggalBersama, bloodType: data.bloodType ?? null,
-                    beratKg: data.beratKg ?? null, tinggiCm: data.tinggiCm ?? null,
+                    fullName: data.fullName,
+                    nisn: data.nisn ?? null,
+                    nik: data.nik,
+                    tempatLahir: data.tempatLahir,
+                    tanggalLahir: data.tanggalLahir,
+                    gender: data.gender,
+                    agama: data.agama,
+                    keadaanOrtu: data.keadaanOrtu,
+                    statusKeluarga: data.statusKeluarga,
+                    anakKe: data.anakKe ?? null,
+                    dariBersaudara: data.dariBersaudara ?? null,
+                    tinggalBersama: data.tinggalBersama,
+                    bloodType: data.bloodType ?? null,
+                    beratKg: data.beratKg ?? null,
+                    tinggiCm: data.tinggiCm ?? null,
                     riwayatPenyakit: data.riwayatPenyakit ?? null,
-                    asalSekolah: data.asalSekolah, kewarganegaraan: data.kewarganegaraan,
-                    alamatJalan: data.alamatJalan ?? null, rt: data.rt ?? null, rw: data.rw ?? null,
-                    desaKelurahan: data.desaKelurahan, kecamatan: data.kecamatan,
-                    kabupaten: data.kabupaten, provinsi: data.provinsi, kodePos: data.kodePos,
-                    phone: data.phone, email: data.email ?? null,
+                    asalSekolah: data.asalSekolah,
+                    kewarganegaraan: data.kewarganegaraan,
+                    alamatJalan: data.alamatJalan ?? null,
+                    rt: data.rt ?? null,
+                    rw: data.rw ?? null,
+                    desaKelurahan: data.desaKelurahan,
+                    kecamatan: data.kecamatan,
+                    kabupaten: data.kabupaten,
+                    provinsi: data.provinsi,
+                    kodePos: data.kodePos,
+                    phone: data.phone,
+                    email: data.email ?? null,
+                    // ── FIELD BARU ──
+                    jarakRumahSekolah: data.jarakRumahSekolah ?? null,
+                    alamatLengkap: data.alamatLengkap ?? null,
+                    rataRataRaport: data.rataRataRaport ?? null,
                     batchId: data.batchId,
                 },
             });

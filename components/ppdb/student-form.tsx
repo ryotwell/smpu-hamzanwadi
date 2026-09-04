@@ -15,7 +15,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-import { Loader2, Upload } from "lucide-react";
+import { Loader2, Upload, MapPin } from "lucide-react";
+import { LocationSearch } from "@/components/ppdb/location-search";
+import { calculateDistance, getSchoolCoordinates } from "@/lib/distance";
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -165,13 +167,37 @@ export function StudentForm({
     const [files, setFiles] = useState<Record<string, File | null>>({
         photo: null, kartuKeluarga: null, aktaKelahiran: null, ijazahSKL: null, prestasi: null,
     });
+    
+    // State untuk lokasi
+    const [selectedLocation, setSelectedLocation] = useState<{
+        address: string;
+        lat: number;
+        lng: number;
+    } | null>(null);
 
-    const { register, handleSubmit, formState: { errors } } = useForm<PPDBFormValues>({
+    const { register, handleSubmit, formState: { errors }, setValue, getValues } = useForm<PPDBFormValues>({
         resolver: zodResolver(PPDBSchema),
         defaultValues: { kewarganegaraan: "WNI", ...defaultValues },
     });
 
     const e = errors as Record<string, { message?: string }>;
+
+    // Handler untuk pemilihan lokasi
+    const handleLocationSelect = (address: string, lat: number, lng: number) => {
+        if (lat === 0 && lng === 0) {
+            setSelectedLocation(null);
+            setValue("alamatLengkap", null);
+            setValue("jarakRumahSekolah", null);
+            return;
+        }
+
+        const school = getSchoolCoordinates();
+        const distance = calculateDistance(lat, lng, school.lat, school.lng);
+        
+        setSelectedLocation({ address, lat, lng });
+        setValue("alamatLengkap", address);
+        setValue("jarakRumahSekolah", distance);
+    };
 
     const onSubmit = (data: PPDBFormValues) => {
         if (mode === "create") {
@@ -206,6 +232,9 @@ export function StudentForm({
 
     const numReg = (name: keyof PPDBFormValues) =>
         register(name, { setValueAs: (v: string) => v === "" ? null : Number(v) });
+
+    // Jarak yang dihitung
+    const distance = getValues("jarakRumahSekolah") || null;
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -247,11 +276,57 @@ export function StudentForm({
                 <TextInput id="beratKg" label="Berat Badan (kg)" type="number" min={1} error={e.beratKg?.message} {...numReg("beratKg")} />
                 <TextInput id="tinggiCm" label="Tinggi Badan (cm)" type="number" min={1} error={e.tinggiCm?.message} {...numReg("tinggiCm")} />
                 <TextareaInput id="riwayatPenyakit" label="Riwayat Penyakit" full placeholder="Opsional — tulis jika ada" error={e.riwayatPenyakit?.message} {...register("riwayatPenyakit")} />
+                <TextInput id="rataRataRaport" label="Rata-rata Nilai Raport" type="number" min={0} max={100} step="0.01" placeholder="0–100" error={e.rataRataRaport?.message} {...numReg("rataRataRaport")} />
+
             </div>
 
             {/* ── Alamat & Kontak ───────────────────────────────────────────── */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <SectionTitle>Alamat & Kontak</SectionTitle>
+                
+                {/* ── Pencarian Alamat (BARU) ── */}
+                <div className="col-span-full">
+                    <Field label="Cari Alamat Rumah" required>
+                        <LocationSearch
+                            onSelect={handleLocationSelect}
+                            placeholder="Ketik nama jalan, desa, atau kecamatan..."
+                            defaultValue={defaultValues?.alamatLengkap || ""}
+                        />
+                        <p className="text-xs text-muted-foreground mt-1">
+                            Ketik minimal 3 karakter untuk mencari alamat. Jarak akan dihitung otomatis.
+                        </p>
+                    </Field>
+                </div>
+
+                {/* ── Jarak (otomatis) ── */}
+                <div className="col-span-full">
+                    <Field label="Jarak Rumah ke Sekolah">
+                        <div className="flex items-center gap-3 p-3 rounded-md border bg-muted/30">
+                            <MapPin className="h-5 w-5 text-primary shrink-0" />
+                            <span className="text-sm">
+                                {distance !== null && distance > 0 ? (
+                                    <>
+                                        <span className="font-semibold text-lg">{distance}</span>
+                                        <span className="text-muted-foreground ml-1">km</span>
+                                        {distance > 10 && (
+                                            <span className="ml-2 text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
+                                                Cukup jauh
+                                            </span>
+                                        )}
+                                    </>
+                                ) : selectedLocation ? (
+                                    <span className="text-muted-foreground">Menghitung jarak...</span>
+                                ) : (
+                                    <span className="text-muted-foreground">Pilih alamat di atas untuk menghitung jarak</span>
+                                )}
+                            </span>
+                        </div>
+                        <input type="hidden" {...register("jarakRumahSekolah")} />
+                        <input type="hidden" {...register("alamatLengkap")} />
+                    </Field>
+                </div>
+
+                {/* ── Alamat detail (manual) ── */}
                 <TextInput id="alamatJalan" label="Jalan / Dusun" full placeholder="Nama jalan, nomor rumah, dusun" error={e.alamatJalan?.message} {...register("alamatJalan")} />
                 <TextInput id="rt" label="RT" placeholder="001" error={e.rt?.message} {...register("rt")} />
                 <TextInput id="rw" label="RW" placeholder="002" error={e.rw?.message} {...register("rw")} />

@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
   Sidebar,
@@ -14,58 +15,30 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import {
-  LayoutDashboard,
-  Users,
+  Building2,
+  CalendarRange,
+  ClipboardCheck,
   GraduationCap,
-  UserPlus,
-  BookOpen,
-  Calculator,
-  Award,
-  Settings,
+  HelpCircle,
+  LayoutDashboard,
+  Newspaper,
   School,
-  FileText
+  Settings,
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 
-// Menu items
 const items = [
-  {
-    title: "Dashboard",
-    url: "/admin/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    title: "PPDB Online",
-    url: "/admin/ppdb",
-    icon: UserPlus,
-    badge: "12",
-  },
-  {
-    title: "Akademik",
-    url: "#",
-    icon: BookOpen,
-  },
-  {
-    title: "Kriteria SAW",
-    url: "#",
-    icon: Calculator,
-  },
-  {
-    title: "Hasil Seleksi",
-    url: "#",
-    icon: Award,
-  },
-  {
-    title: "Blank Page",
-    url: "/admin/blank",
-    icon: FileText,
-  },
-  {
-    title: "Pengaturan",
-    url: "#",
-    icon: Settings,
-  },
+  { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
+  { title: "PPDB Online", url: "/admin/ppdb", icon: GraduationCap, badge: "12" },
+  { title: "Batch", url: "/admin/batch", icon: CalendarRange },
+  { title: "Kurikulum", url: "/admin/curriculum", icon: ClipboardCheck },
+  { title: "Fasilitas", url: "/admin/facility", icon: Building2 },
+  { title: "Persyaratan", url: "/admin/requirement", icon: ClipboardCheck },
+  { title: "Pertanyaan", url: "/admin/faq", icon: HelpCircle },
+  { title: "Berita & Artikel", url: "/admin/posts", icon: Newspaper },
+  { title: "Pengaturan", url: "#", icon: Settings },
 ]
+
 
 export function AppSidebar() {
   const pathname = usePathname();
@@ -92,7 +65,7 @@ export function AppSidebar() {
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild isActive={isActive} tooltip={item.title} className={isActive ? "bg-indigo-600 hover:bg-indigo-600/90 text-white hover:text-white data-[active=true]:bg-indigo-600 data-[active=true]:text-white" : "text-muted-foreground hover:text-foreground"}>
-                      <a href={item.url} className="flex items-center justify-between w-full">
+                      <Link href={item.url} className="flex items-center justify-between w-full">
                         <div className="flex items-center gap-3">
                           <item.icon className="size-5" />
                           <span className="font-medium text-[15px]">{item.title}</span>
@@ -102,7 +75,7 @@ export function AppSidebar() {
                             {item.badge}
                           </span>
                         )}
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 )

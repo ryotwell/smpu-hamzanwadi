@@ -95,6 +95,15 @@ model Student {
   phone                 String
   email                 String?
 
+  jarakRumahSekolah Float?   // Jarak rumah ke sekolah dalam kilometer (otomatis dari koordinat)
+  alamatLengkap    String?   // Alamat lengkap hasil geocoding dari Nominatim
+  testBahasaInggris     Int?             // Nilai tes bahasa Inggris (1-100)
+  testKarakter          Int?             // Nilai tes karakter (1-100)
+  testAkademik          Int?             // Nilai tes akademik (1-100)
+  rataRataRaport        Float?           // Nilai rata-rata raport (0-100)
+
+
+
   isAccepted            Boolean          @default(false)
 
   parentId              Int              @unique
