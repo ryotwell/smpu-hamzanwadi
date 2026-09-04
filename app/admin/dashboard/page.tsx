@@ -1,48 +1,78 @@
-import { FC } from "react";
+import { prisma } from "@/lib/prisma";
 import { Card, CardContent } from "@/components/ui/card";
-import { TrendingUp, Users, UserPlus, GraduationCap } from "lucide-react";
-import { SalesChart, ActiveCustomersChart, PopularCategoriesChart } from "@/components/dashboard-charts";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { TrendingUp, UserPlus, UserCheck, Clock } from "lucide-react";
+import { RegistrationChart, StatusChart } from "@/components/dashboard-charts";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import Link from "next/link";
 
-interface IDashboardPageProps {}
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 
-const candidates = [
-    { name: "Ahmad Fauzi", brand: "SDN 1 Selong", score: "85.5", icon: "https://i.pravatar.cc/150?u=a042581f4e29026024d" },
-    { name: "Budi Santoso", brand: "SDN 2 Pancor", score: "92.0", icon: "https://i.pravatar.cc/150?u=a042581f4e29026024e" },
-    { name: "Citra Kirana", brand: "MI NW Pancor", score: "78.5", icon: "https://i.pravatar.cc/150?u=a042581f4e29026024f" },
-    { name: "Dewi Lestari", brand: "SDN 3 Selong", score: "88.0", icon: "https://i.pravatar.cc/150?u=a042581f4e29026024g" },
-    { name: "Eko Prasetyo", brand: "SDN 1 Masbagik", score: "75.0", icon: "https://i.pravatar.cc/150?u=a042581f4e29026024h" },
-    { name: "Fatimah Azzahra", brand: "MI Muhammadiyah", score: "90.5", icon: "https://i.pravatar.cc/150?u=a042581f4e29026024i" },
-];
+// ponytail: agregasi bulanan di memori — pindah ke groupBy/raw SQL jika data >10rb siswa.
+export default async function DashboardPage() {
+    const students = await prisma.student.findMany({
+        select: { createdAt: true, isAccepted: true },
+    });
 
-const stats = [
-    {
-        label: "Total Siswa Aktif",
-        value: "452",
-        sub: "Tahun Ajaran 2026/2027",
-        trend: "5.2%",
-        icon: Users,
-        iconBg: "bg-indigo-100 text-indigo-600",
-    },
-    {
-        label: "Pendaftar PPDB",
-        value: "128",
-        sub: "Gelombang 1",
-        trend: "12.5%",
-        icon: UserPlus,
-        iconBg: "bg-amber-100 text-amber-600",
-    },
-    {
-        label: "Guru & Staf",
-        value: "45",
-        sub: "Tetap & Honorer",
-        trend: null,
-        icon: GraduationCap,
-        iconBg: "bg-teal-100 text-teal-600",
-    },
-];
+    const [activeBatch, recent] = await Promise.all([
+        prisma.batch.findFirst({ where: { isActive: true }, orderBy: { startDate: "desc" } }),
+        prisma.student.findMany({
+            orderBy: { createdAt: "desc" },
+            take: 6,
+            select: { id: true, fullName: true, asalSekolah: true, rataRataRaport: true },
+        }),
+    ]);
 
-export const DashboardPage: FC<IDashboardPageProps> = () => {
+    const diterima = students.filter((s) => s.isAccepted).length;
+    const menunggu = students.length - diterima;
+
+    const now = new Date();
+    const windowStart = new Date(now.getFullYear(), now.getMonth() - 11).getTime();
+    const thisMonth = new Date(now.getFullYear(), now.getMonth()).getTime();
+    const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1).getTime();
+    let bulanIni = 0;
+    let bulanLalu = 0;
+
+    const registrationData = MONTHS.map((month) => ({ month, pendaftar: 0, lulus: 0 }));
+    for (const s of students) {
+        const t = s.createdAt.getTime();
+        if (t < windowStart) continue;
+        const m = s.createdAt.getMonth();
+        registrationData[m].pendaftar++;
+        if (s.isAccepted) registrationData[m].lulus++;
+        if (t >= thisMonth) bulanIni++;
+        else if (t >= lastMonth) bulanLalu++;
+    }
+    const trend = bulanLalu
+        ? `${(((bulanIni - bulanLalu) / bulanLalu) * 100).toFixed(1)}%`
+        : null;
+
+    const stats = [
+        {
+            label: "Pendaftar PPDB",
+            value: students.length,
+            sub: activeBatch ? activeBatch.name : "Semua Gelombang",
+            trend,
+            icon: UserPlus,
+            iconBg: "bg-amber-100 text-amber-600",
+        },
+        {
+            label: "Siswa Diterima",
+            value: diterima,
+            sub: "Lulus seleksi PPDB",
+            trend: null,
+            icon: UserCheck,
+            iconBg: "bg-indigo-100 text-indigo-600",
+        },
+        {
+            label: "Menunggu Verifikasi",
+            value: menunggu,
+            sub: "Perlu ditinjau",
+            trend: null,
+            icon: Clock,
+            iconBg: "bg-teal-100 text-teal-600",
+        },
+    ];
+
     return (
         <div className="flex flex-col gap-4 md:gap-6 w-full max-w-7xl mx-auto">
 
@@ -88,40 +118,48 @@ export const DashboardPage: FC<IDashboardPageProps> = () => {
 
                 {/* Left — Charts */}
                 <div className="lg:col-span-2 flex flex-col gap-4 md:gap-6 min-w-0">
-                    <SalesChart />
-                    <ActiveCustomersChart />
+                    <RegistrationChart data={registrationData} />
                 </div>
 
                 {/* Right — Categories + Candidates */}
                 <div className="flex flex-col gap-4 md:gap-6 min-w-0">
-                    <PopularCategoriesChart />
+                    <StatusChart diterima={diterima} menunggu={menunggu} />
 
                     <Card className="shadow-sm border-0 ring-1 ring-border/50">
                         <CardContent className="p-4 md:p-6">
                             <div className="flex items-center justify-between mb-4 md:mb-6">
                                 <h3 className="text-base md:text-lg font-bold">Calon Siswa Terbaru</h3>
-                                <button className="text-xs md:text-sm text-muted-foreground hover:text-foreground shrink-0 ml-2">
+                                <Link
+                                    href="/admin/ppdb"
+                                    className="text-xs md:text-sm text-muted-foreground hover:text-foreground shrink-0 ml-2"
+                                >
                                     Lihat Semua
-                                </button>
+                                </Link>
                             </div>
                             <div className="flex flex-col gap-4 md:gap-5">
-                                {candidates.map((c, index) => (
-                                    <div key={index} className="flex items-center justify-between gap-2 min-w-0">
+                                {recent.map((c) => (
+                                    <Link
+                                        key={c.id}
+                                        href={`/admin/ppdb/${c.id}`}
+                                        className="flex items-center justify-between gap-2 min-w-0"
+                                    >
                                         <div className="flex items-center gap-2 md:gap-3 min-w-0">
                                             <Avatar className="h-8 w-8 md:h-10 md:w-10 shrink-0 border bg-muted">
-                                                <AvatarImage src={c.icon} />
-                                                <AvatarFallback>{c.name.charAt(0)}</AvatarFallback>
+                                                <AvatarFallback>{c.fullName.charAt(0)}</AvatarFallback>
                                             </Avatar>
                                             <div className="flex flex-col min-w-0">
-                                                <span className="font-semibold text-xs md:text-sm truncate">{c.name}</span>
-                                                <span className="text-xs text-muted-foreground truncate">{c.brand}</span>
+                                                <span className="font-semibold text-xs md:text-sm truncate">{c.fullName}</span>
+                                                <span className="text-xs text-muted-foreground truncate">{c.asalSekolah}</span>
                                             </div>
                                         </div>
                                         <span className="text-xs md:text-sm font-semibold text-indigo-600 shrink-0 tabular-nums">
-                                            {c.score}
+                                            {c.rataRataRaport != null ? c.rataRataRaport.toFixed(1) : "—"}
                                         </span>
-                                    </div>
+                                    </Link>
                                 ))}
+                                {recent.length === 0 && (
+                                    <p className="text-sm text-muted-foreground">Belum ada pendaftar.</p>
+                                )}
                             </div>
                         </CardContent>
                     </Card>
@@ -129,6 +167,4 @@ export const DashboardPage: FC<IDashboardPageProps> = () => {
             </div>
         </div>
     );
-};
-
-export default DashboardPage;
+}
