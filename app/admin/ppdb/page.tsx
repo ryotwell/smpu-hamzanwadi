@@ -24,7 +24,6 @@ import {
   FileCheck,
   XCircle,
   Clock,
-  MapPin,
 } from "lucide-react";
 import Link from "next/link";
 import { RowActions } from "./row-actions";
@@ -62,12 +61,10 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
       fullName: true,
       asalSekolah: true,
       isAccepted: true,
-      jarakRumahSekolah: true,
       testBahasaInggris: true,
       testKarakter: true,
       testAkademik: true,
       rataRataRaport: true,
-
     },
   });
 
@@ -126,7 +123,6 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
                 <TableHead className="w-[280px]">Calon Siswa</TableHead>
                 <TableHead>No. Daftar</TableHead>
                 <TableHead>Asal Sekolah</TableHead>
-                <TableHead>Jarak (km)</TableHead>
                 <TableHead>Tes Inggris</TableHead>
                 <TableHead>Tes Karakter</TableHead>
                 <TableHead>Tes Akademik</TableHead>
@@ -138,7 +134,7 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
             <TableBody>
               {applicants.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={10} className="h-24 text-center text-muted-foreground">
+                  <TableCell colSpan={9} className="h-24 text-center text-muted-foreground">
                     Belum ada data pendaftar.
                   </TableCell>
                 </TableRow>
@@ -165,21 +161,6 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
                       </TableCell>
                       <TableCell className="text-muted-foreground">
                         {applicant.asalSekolah}
-                      </TableCell>
-                      <TableCell>
-                        {applicant.jarakRumahSekolah ? (
-                          <div className="flex items-center gap-1">
-                            <MapPin className="h-3 w-3 text-muted-foreground" />
-                            <span>{applicant.jarakRumahSekolah}</span>
-                            {applicant.jarakRumahSekolah > 10 && (
-                              <Badge variant="outline" className="text-amber-600 text-[10px]">
-                                Jauh
-                              </Badge>
-                            )}
-                          </div>
-                        ) : (
-                          <span className="text-muted-foreground text-sm">-</span>
-                        )}
                       </TableCell>
                       <TableCell className="font-semibold text-primary">
                         {applicant.testBahasaInggris ?? "—"}

@@ -44,7 +44,7 @@ export async function createStudentAction(formData: FormData): Promise<PPDBActio
         if (value instanceof File) continue;
 
         // Coerce numeric fields
-        const numericFields = ["batchId", "anakKe", "dariBersaudara", "beratKg", "tinggiCm", "jarakRumahSekolah", "rataRataRaport"];
+        const numericFields = ["batchId", "anakKe", "dariBersaudara", "beratKg", "tinggiCm", "rataRataRaport"];
         if (numericFields.includes(key)) {
             const num = Number(value);
             raw[key] = value === "" ? null : isNaN(num) ? null : num;
@@ -151,9 +151,6 @@ export async function createStudentAction(formData: FormData): Promise<PPDBActio
                     kodePos: data.kodePos,
                     phone: data.phone,
                     email: data.email ?? null,
-                    // ── FIELD BARU ──
-                    jarakRumahSekolah: data.jarakRumahSekolah ?? null,
-                    alamatLengkap: data.alamatLengkap ?? null,
                     rataRataRaport: data.rataRataRaport ?? null,
                     parentId: parentRecord.id,
                     fileId: fileRecord.id,
@@ -179,7 +176,7 @@ export async function updateStudentAction(
     const raw: Record<string, unknown> = {};
     for (const [key, value] of formData.entries()) {
         if (value instanceof File) continue;
-        const numericFields = ["batchId", "anakKe", "dariBersaudara", "beratKg", "tinggiCm", "jarakRumahSekolah", "rataRataRaport"];
+        const numericFields = ["batchId", "anakKe", "dariBersaudara", "beratKg", "tinggiCm", "rataRataRaport"];
         if (numericFields.includes(key)) {
             const num = Number(value);
             raw[key] = value === "" ? null : isNaN(num) ? null : num;
@@ -287,9 +284,6 @@ export async function updateStudentAction(
                     kodePos: data.kodePos,
                     phone: data.phone,
                     email: data.email ?? null,
-                    // ── FIELD BARU ──
-                    jarakRumahSekolah: data.jarakRumahSekolah ?? null,
-                    alamatLengkap: data.alamatLengkap ?? null,
                     rataRataRaport: data.rataRataRaport ?? null,
                     batchId: data.batchId,
                 },

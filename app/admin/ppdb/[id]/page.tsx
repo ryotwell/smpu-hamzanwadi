@@ -269,26 +269,6 @@ export default async function StudentDetailPage({ params }: DetailPageProps) {
                 {student.tinggiCm ? `${student.tinggiCm} cm` : "-"}
               </p>
             </div>
-            {student.jarakRumahSekolah && (
-              <div>
-                <p className="text-sm text-muted-foreground">Jarak ke Sekolah</p>
-                <p className="font-medium flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-primary" />
-                  {student.jarakRumahSekolah} km
-                  {student.jarakRumahSekolah > 10 && (
-                    <Badge variant="outline" className="text-amber-600">
-                      Jarak jauh
-                    </Badge>
-                  )}
-                </p>
-              </div>
-            )}
-            {student.alamatLengkap && (
-              <div className="col-span-full">
-                <p className="text-sm text-muted-foreground">Alamat Lengkap (Hasil Geocoding)</p>
-                <p className="font-medium text-sm">{student.alamatLengkap}</p>
-              </div>
-            )}
           </div>
         </CardContent>
       </Card>
@@ -426,12 +406,6 @@ export default async function StudentDetailPage({ params }: DetailPageProps) {
                   {student.kabupaten}, {student.provinsi}
                 </p>
                 <p className="font-medium">Kode Pos: {student.kodePos}</p>
-                {student.alamatLengkap && (
-                  <div className="mt-2 pt-2 border-t">
-                    <p className="text-xs text-muted-foreground">Alamat lengkap (hasil geocoding)</p>
-                    <p className="text-sm">{student.alamatLengkap}</p>
-                  </div>
-                )}
               </div>
             </div>
             <div className="space-y-2">
@@ -452,20 +426,6 @@ export default async function StudentDetailPage({ params }: DetailPageProps) {
                   <p className="font-medium flex items-center gap-2">
                     <Mail className="h-4 w-4 text-muted-foreground" />
                     {student.email}
-                  </p>
-                </div>
-              )}
-              {student.jarakRumahSekolah && (
-                <div>
-                  <p className="text-sm text-muted-foreground">Jarak ke Sekolah</p>
-                  <p className="font-medium flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-primary" />
-                    {student.jarakRumahSekolah} km
-                    {student.jarakRumahSekolah > 10 && (
-                      <Badge variant="outline" className="text-amber-600">
-                        Jarak jauh
-                      </Badge>
-                    )}
                   </p>
                 </div>
               )}
