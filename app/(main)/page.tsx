@@ -11,6 +11,8 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
     title: "SMP Unggulan Hamzanwadi — Sekolah Unggulan Berkarakter Islami",
     description: "SMP Unggulan Hamzanwadi Lombok Timur NTB — pendidikan berkualitas, berwawasan global, berkarakter islami.",

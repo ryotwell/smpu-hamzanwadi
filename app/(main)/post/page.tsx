@@ -5,6 +5,8 @@ import { Footer } from "@/components/main/footer";
 import { CalendarDays, BookOpen, ArrowRight, Search } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
     title: "Berita & Artikel | SMP Unggulan Hamzanwadi",
     description: "Informasi terkini, berita, dan artikel dari SMP Unggulan Hamzanwadi Lombok Timur.",

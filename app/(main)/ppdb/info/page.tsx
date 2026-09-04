@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Navbar } from "@/components/main/navbar";
 import { Footer } from "@/components/main/footer";
 
+export const dynamic = "force-dynamic";
+
 export const metadata = {
     title: "Info PPDB | SMP Unggulan Hamzanwadi",
     description: "Informasi lengkap Penerimaan Peserta Didik Baru (PPDB) SMP Unggulan Hamzanwadi — persyaratan, alur pendaftaran, jadwal, dan FAQ.",
