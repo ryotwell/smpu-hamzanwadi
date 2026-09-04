@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Navbar } from "@/components/main/navbar";
 import { Footer } from "@/components/main/footer";
 import {
-    GraduationCap, BookOpen, Users, Award, ArrowRight,
+    BookOpen, ArrowRight,
     CalendarDays, ChevronDown, CheckCircle, ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,13 +19,12 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-    const [posts, facilities, programs, faqs, activeBatch, totalStudents] = await Promise.all([
+    const [posts, facilities, programs, faqs, activeBatch] = await Promise.all([
         prisma.post.findMany({ where: { published: true }, orderBy: { publishedAt: "desc" }, take: 3, select: { id: true, title: true, slug: true, thumbnail: true, excerpt: true, publishedAt: true, category: true } }),
         prisma.facility.findMany({ take: 6, select: { id: true, name: true, image: true, description: true } }),
         prisma.curriculum.findMany({ select: { id: true, name: true, category: true, description: true, image: true } }),
         prisma.faq.findMany({ take: 6, select: { id: true, question: true, answer: true } }),
         prisma.batch.findFirst({ where: { isActive: true }, select: { id: true, name: true, jalur: true, startDate: true, endDate: true } }),
-        prisma.student.count(),
     ]);
 
     const extracurriculars = programs.filter(p => p.category === "EXTRACURRICULAR");
@@ -86,7 +85,7 @@ export default async function HomePage() {
             </div>
 
             {/* ── STATS ─────────────────────────────────────────────────── */}
-            <section id="tentang" className="bg-secondary py-14">
+            {/* <section id="tentang" className="bg-secondary py-14">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-6">
                     {[
                         { icon: Users, val: `${totalStudents}+`, label: "Total Pendaftar" },
@@ -103,7 +102,7 @@ export default async function HomePage() {
                         </div>
                     ))}
                 </div>
-            </section>
+            </section> */}
 
             {/* ── PPDB BANNER ───────────────────────────────────────────── */}
             {activeBatch && (
@@ -295,7 +294,7 @@ export default async function HomePage() {
                                 Isi Formulir Pendaftaran <ArrowRight className="size-4" />
                             </Link>
                         </Button>
-                        <Button variant="outline" className="rounded-full border-white/20 text-white hover:border-white/40" asChild>
+                        <Button variant="outline" className="rounded-full border-white/20 hover:border-white/40" asChild>
                             <Link href="/ppdb/info">
                                 Info PPDB
                             </Link>

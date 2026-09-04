@@ -35,7 +35,7 @@ export function Footer() {
                     <h4 className="text-white font-semibold text-sm">Navigasi</h4>
                     <ul className="space-y-2.5 text-sm">
                         {[
-                            ["#tentang", "Tentang Sekolah"],
+                            // ["#tentang", "Tentang Sekolah"],
                             ["#program", "Program Unggulan"],
                             ["#fasilitas", "Fasilitas"],
                             ["#berita", "Berita & Artikel"],
