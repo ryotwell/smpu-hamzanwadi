@@ -198,11 +198,11 @@ export default function SigninPage() {
                             />
 
                             {/* Forgot password */}
-                            <div className="flex justify-end">
+                            {/* <div className="flex justify-end">
                                 <a href="#" className="text-sm text-white/60 hover:text-white transition-colors duration-200">
                                     Lupa kata sandi?
                                 </a>
-                            </div>
+                            </div> */}
 
                             {/* Submit */}
                             <Button

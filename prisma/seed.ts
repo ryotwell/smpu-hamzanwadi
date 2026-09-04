@@ -255,40 +255,26 @@ async function main() {
         'Pasukan Pengibar Bendera yang melatih kedisiplinan, kekompakan, dan rasa cinta tanah air.',
     },
     {
-      name: 'English Club',
-      image: '/assets/curriculum/english-club.jpg',
+      name: 'Futsal',
+      image: '/assets/curriculum/futsal.jpg',
       category: CurriculumCategory.EXTRACURRICULAR,
       description:
-        'Klub bahasa Inggris untuk meningkatkan kemampuan berbicara, mendengar, membaca, dan menulis dalam bahasa Inggris.',
-    },
-    {
-      name: 'Robotik',
-      image: '/assets/curriculum/robotik.jpg',
-      category: CurriculumCategory.EXTRACURRICULAR,
-      description:
-        'Ekstrakurikuler robotik yang mengenalkan dasar-dasar pemrograman dan perakitan robot.',
+        'Kegiatan ekstrakurikuler futsal yang mengembangkan kemampuan bermain sepak bola dalam ruangan, kerja sama tim, disiplin, sportivitas, dan kebugaran jasmani siswa.',
     },
     // PROGRAM UNGGULAN
     {
-      name: 'Tahfidz Al-Quran',
+      name: 'Mengaji Al-Quran',
       image: '/assets/curriculum/tahfidz.jpg',
       category: CurriculumCategory.PROGRAM_UNGGULAN,
       description:
-        'Program unggulan tahfidz dengan target hafalan minimal 3 juz selama masa studi. Dibimbing oleh guru tahfidz bersertifikat.',
+        'Program pembiasaan mengaji Al-Quran yang dilaksanakan setiap hari untuk meningkatkan kemampuan membaca Al-Quran serta membentuk kebiasaan dan kecintaan terhadap Al-Quran.',
     },
     {
-      name: 'Kelas Olimpiade Sains',
-      image: '/assets/curriculum/kelas-olimpiade.jpg',
+      name: 'Bahasa Inggris Harian',
+      image: '/assets/curriculum/english.jpg',
       category: CurriculumCategory.PROGRAM_UNGGULAN,
       description:
-        'Pembinaan intensif untuk persiapan Olimpiade Sains Nasional (OSN) bidang Matematika, Fisika, Biologi, dan IPS.',
-    },
-    {
-      name: 'Kelas Coding & Digital Literacy',
-      image: '/assets/curriculum/coding.jpg',
-      category: CurriculumCategory.PROGRAM_UNGGULAN,
-      description:
-        'Program pengenalan coding dan literasi digital sebagai bekal siswa menghadapi era digital.',
+        'Program pembiasaan menggunakan bahasa Inggris dalam keseharian di lingkungan sekolah untuk meningkatkan kemampuan komunikasi dan membangun kepercayaan diri siswa dalam berbahasa Inggris.',
     },
     // KO-CULLICULAR
     {
@@ -320,18 +306,11 @@ async function main() {
 
   // ── Requirements ──
   const requirements = [
-    { description: 'Fotokopi Akta Kelahiran (legalisir) — 2 lembar' },
-    { description: 'Fotokopi Kartu Keluarga (legalisir) — 2 lembar' },
-    { description: 'Fotokopi Ijazah/SKL SD/MI (legalisir) — 2 lembar' },
-    { description: 'Pas foto terbaru ukuran 3×4 — 4 lembar (latar merah)' },
-    { description: 'Fotokopi Raport SD/MI semester 1–5 — 1 rangkap' },
-    { description: 'Surat Keterangan Sehat dari Puskesmas/Dokter' },
-    { description: 'Fotokopi Kartu NISN — 1 lembar' },
-    { description: 'Surat Rekomendasi dari Kepala Sekolah SD/MI asal' },
-    { description: 'Portofolio prestasi (bagi jalur prestasi)' },
-    { description: 'Fotokopi sertifikat penghargaan/kejuaraan (jika ada)' },
-    { description: 'Surat pernyataan bermaterai kesediaan mematuhi tata tertib sekolah' },
-    { description: 'Fotokopi KTP Orang Tua/Wali — 1 lembar' },
+    { description: 'Mengisi formulir pendaftaran.' },
+    { description: 'Foto copy paspor ukuran 3x4 (2 lembar).' },
+    { description: 'Fotokopi Akta Kelahiran.' },
+    { description: 'Fotokopi Kartu Keluarga (KK).' },
+    { description: 'Sertifikat Prestasi (Jika ada).' },
   ];
 
   for (const req of requirements) {
@@ -354,41 +333,6 @@ async function main() {
       question: 'Kapan batas waktu pendaftaran PPDB?',
       answer:
         'Informasi batas waktu pendaftaran dapat dilihat pada halaman PPDB website resmi SMP Unggulan. Umumnya pendaftaran dibuka pada bulan Januari hingga Juni setiap tahunnya.',
-    },
-    {
-      question: 'Apakah ada beasiswa untuk siswa berprestasi?',
-      answer:
-        'Ya, SMP Unggulan menyediakan beasiswa bagi siswa berprestasi akademik maupun non-akademik. Beasiswa dapat berupa pembebasan biaya SPP atau keringanan biaya pendidikan lainnya sesuai dengan kebijakan sekolah.',
-    },
-    {
-      question: 'Apa keunggulan SMP Unggulan dibandingkan sekolah lain?',
-      answer:
-        'SMP Unggulan memiliki keunggulan dalam: kurikulum terpadu antara akademik dan keagamaan, program tahfidz Al-Quran, pembinaan olimpiade sains, laboratorium dan fasilitas modern, tenaga pengajar berkualitas, serta lingkungan belajar yang islami dan kondusif.',
-    },
-    {
-      question: 'Apakah SMP Unggulan menerapkan Kurikulum Merdeka?',
-      answer:
-        'Ya, SMP Unggulan menerapkan Kurikulum Merdeka yang berfokus pada pengembangan kompetensi dan karakter siswa melalui pembelajaran intrakurikuler yang beragam dan proyek penguatan profil pelajar Pancasila (P5).',
-    },
-    {
-      question: 'Bagaimana sistem pembelajaran di SMP Unggulan?',
-      answer:
-        'Sistem pembelajaran menggunakan pendekatan aktif, kreatif, efektif, dan menyenangkan (PAKEM) yang dipadukan dengan nilai-nilai islami. Pembelajaran didukung oleh teknologi informasi dan praktikum di laboratorium.',
-    },
-    {
-      question: 'Apakah ada program boarding atau asrama?',
-      answer:
-        'SMP Unggulan menyediakan program boarding (asrama) bagi siswa yang membutuhkan. Program boarding memberikan pembinaan karakter 24 jam dengan kegiatan keagamaan, belajar mandiri, dan pengembangan bakat yang terstruktur.',
-    },
-    {
-      question: 'Apa saja ekstrakurikuler yang tersedia?',
-      answer:
-        'Ekstrakurikuler yang tersedia meliputi: Pramuka (wajib), Paskibra, English Club, Robotik, Seni Musik, Seni Tari, Tahfidz, Olahraga (basket, voli, futsal, bulu tangkis), dan Karya Ilmiah Remaja.',
-    },
-    {
-      question: 'Bagaimana cara menghubungi pihak sekolah untuk informasi lebih lanjut?',
-      answer:
-        'Informasi lebih lanjut dapat menghubungi nomor telepon (0274) 123456, WhatsApp 0812-3456-7890, atau datang langsung ke kampus SMP Unggulan di Jalan Pendidikan No. 123, Yogyakarta. Senin–Jumat pukul 07.30–15.00 WIB.',
     },
   ];
 

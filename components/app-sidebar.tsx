@@ -24,12 +24,14 @@ import {
   Newspaper,
   School,
   Settings,
+  Trophy,
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 
 const items = [
   { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
-  { title: "PPDB Online", url: "/admin/ppdb", icon: GraduationCap, badge: "12" },
+  { title: "PPDB Online", url: "/admin/ppdb", icon: GraduationCap },
+  { title: "Hasil Seleksi SAW", url: "/admin/saw", icon: Trophy },
   { title: "Batch", url: "/admin/batch", icon: CalendarRange },
   { title: "Kurikulum", url: "/admin/curriculum", icon: ClipboardCheck },
   { title: "Fasilitas", url: "/admin/facility", icon: Building2 },
