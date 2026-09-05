@@ -102,7 +102,7 @@ model Student {
 
 
 
-  isAccepted            Boolean          @default(false)
+  status                StatusPendaftaran @default(MENUNGGU)
 
   parentId              Int              @unique
   parent                Parent           @relation("ParentStudent", fields: [parentId], references: [id])
@@ -175,6 +175,12 @@ model Faq {
   answer    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+enum StatusPendaftaran {
+  DITERIMA
+  DITOLAK
+  MENUNGGU
 }
 
 enum Gender {

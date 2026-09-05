@@ -29,9 +29,9 @@ import Link from "next/link";
 import { RowActions } from "./row-actions";
 
 const statusConfig = {
-  diterima: { label: "Diterima", variant: "default" as const, icon: FileCheck },
+  diterima: { label: "Diterima di Sekolah", variant: "default" as const, icon: FileCheck },
   menunggu: { label: "Menunggu", variant: "outline" as const, icon: Clock },
-  ditolak: { label: "Ditolak", variant: "destructive" as const, icon: XCircle },
+  ditolak: { label: "Tidak Diterima", variant: "destructive" as const, icon: XCircle },
 } as const;
 
 type StatusKey = keyof typeof statusConfig;
@@ -60,7 +60,7 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
       kodePendaftaran: true,
       fullName: true,
       asalSekolah: true,
-      isAccepted: true,
+      status: true,
       testBahasaInggris: true,
       testKarakter: true,
       testAkademik: true,
@@ -70,11 +70,11 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
 
   const applicants = students.map((s) => ({
     ...s,
-    status: (s.isAccepted ? "diterima" : "menunggu") as StatusKey,
+    status: s.status.toLowerCase() as StatusKey,
   }));
 
   return (
-    <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto">
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Data Pendaftar PPDB</h1>
@@ -116,7 +116,7 @@ export default async function PPDBPage({ searchParams }: PPDBPageProps) {
             </form>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent>
           <Table>
             <TableHeader>
               <TableRow>

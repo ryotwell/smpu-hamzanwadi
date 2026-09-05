@@ -26,9 +26,10 @@ import {
   BookOpen,
   Award,
   FileCheck,
-  Clock,
+  XCircle,
   Image,
   Download,
+  Clock,
 } from "lucide-react";
 import { format } from "date-fns";
 import { id } from "date-fns/locale";
@@ -119,17 +120,23 @@ export default async function StudentDetailPage({ params }: DetailPageProps) {
     notFound();
   }
 
-  const statusBadge = student.isAccepted ? (
-    <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-      <FileCheck className="mr-1 h-3 w-3" />
-      Diterima
-    </Badge>
-  ) : (
-    <Badge variant="outline">
-      <Clock className="mr-1 h-3 w-3" />
-      Menunggu
-    </Badge>
-  );
+  const statusBadge =
+    student.status === "DITERIMA" ? (
+      <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
+        <FileCheck className="mr-1 h-3 w-3" />
+        Diterima di Sekolah
+      </Badge>
+    ) : student.status === "DITOLAK" ? (
+      <Badge variant="destructive">
+        <XCircle className="mr-1 h-3 w-3" />
+        Tidak Diterima
+      </Badge>
+    ) : (
+      <Badge variant="outline">
+        <Clock className="mr-1 h-3 w-3" />
+        Menunggu
+      </Badge>
+    );
 
   return (
     <div className="flex flex-col gap-6 w-full max-w-7xl mx-auto pb-10">

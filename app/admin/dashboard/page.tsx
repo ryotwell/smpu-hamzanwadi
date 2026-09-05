@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Card, CardContent } from "@/components/ui/card";
-import { TrendingUp, UserPlus, UserCheck, Clock } from "lucide-react";
+import { TrendingUp, UserPlus, UserCheck, XCircle, Clock } from "lucide-react";
 import { RegistrationChart, StatusChart } from "@/components/dashboard-charts";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import Link from "next/link";
@@ -10,7 +10,7 @@ const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "
 // ponytail: agregasi bulanan di memori — pindah ke groupBy/raw SQL jika data >10rb siswa.
 export default async function DashboardPage() {
     const students = await prisma.student.findMany({
-        select: { createdAt: true, isAccepted: true },
+        select: { createdAt: true, status: true },
     });
 
     const [activeBatch, recent] = await Promise.all([
@@ -22,8 +22,9 @@ export default async function DashboardPage() {
         }),
     ]);
 
-    const diterima = students.filter((s) => s.isAccepted).length;
-    const menunggu = students.length - diterima;
+    const diterima = students.filter((s) => s.status === "DITERIMA").length;
+    const menunggu = students.filter((s) => s.status === "MENUNGGU").length;
+    const ditolak = students.length - diterima - menunggu;
 
     const now = new Date();
     const windowStart = new Date(now.getFullYear(), now.getMonth() - 11).getTime();
@@ -38,7 +39,7 @@ export default async function DashboardPage() {
         if (t < windowStart) continue;
         const m = s.createdAt.getMonth();
         registrationData[m].pendaftar++;
-        if (s.isAccepted) registrationData[m].lulus++;
+        if (s.status === "DITERIMA") registrationData[m].lulus++;
         if (t >= thisMonth) bulanIni++;
         else if (t >= lastMonth) bulanLalu++;
     }
@@ -56,20 +57,28 @@ export default async function DashboardPage() {
             iconBg: "bg-amber-100 text-amber-600",
         },
         {
-            label: "Siswa Diterima",
+            label: "Diterima di Sekolah",
             value: diterima,
-            sub: "Lulus seleksi PPDB",
+            sub: "Hasil seleksi PPDB",
             trend: null,
             icon: UserCheck,
             iconBg: "bg-indigo-100 text-indigo-600",
         },
         {
-            label: "Menunggu Verifikasi",
+            label: "Menunggu",
             value: menunggu,
-            sub: "Perlu ditinjau",
+            sub: "Proses seleksi",
             trend: null,
             icon: Clock,
-            iconBg: "bg-teal-100 text-teal-600",
+            iconBg: "bg-amber-100 text-amber-600",
+        },
+        {
+            label: "Tidak Diterima",
+            value: ditolak,
+            sub: "Belum diterima di sekolah",
+            trend: null,
+            icon: XCircle,
+            iconBg: "bg-red-100 text-red-600",
         },
     ];
 
@@ -77,11 +86,11 @@ export default async function DashboardPage() {
         <div className="flex flex-col gap-4 md:gap-6 w-full max-w-7xl mx-auto">
 
             {/* ── Stat Cards ──────────────────────────────────────────────── */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-6">
-                {stats.map((stat, i) => (
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+                {stats.map((stat) => (
                     <Card
                         key={stat.label}
-                        className={`shadow-sm border-0 ring-1 ring-border/50 ${i === 2 ? "col-span-2 md:col-span-1" : ""}`}
+                        className="shadow-sm border-0 ring-1 ring-border/50"
                     >
                         <CardContent className="p-4 md:p-6">
                             <div className="flex justify-between items-start">
@@ -123,7 +132,7 @@ export default async function DashboardPage() {
 
                 {/* Right — Categories + Candidates */}
                 <div className="flex flex-col gap-4 md:gap-6 min-w-0">
-                    <StatusChart diterima={diterima} menunggu={menunggu} />
+                    <StatusChart diterima={diterima} menunggu={menunggu} ditolak={ditolak} />
 
                     <Card className="shadow-sm border-0 ring-1 ring-border/50">
                         <CardContent className="p-4 md:p-6">

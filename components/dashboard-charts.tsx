@@ -78,14 +78,19 @@ const statusConfig = {
     label: "Menunggu",
     color: "#f59e0b",
   },
+  tidakDiterima: {
+    label: "Tidak Diterima",
+    color: "#ef4444",
+  },
 } satisfies ChartConfig
 
-export function StatusChart({ diterima, menunggu }: { diterima: number; menunggu: number }) {
-  const total = diterima + menunggu
+export function StatusChart({ diterima, menunggu, ditolak }: { diterima: number; menunggu: number; ditolak: number }) {
+  const total = diterima + menunggu + ditolak
   const pct = (v: number) => (total ? Math.round((v / total) * 100) : 0)
   const data = [
     { name: "Diterima", value: diterima, color: "#4f46e5" },
     { name: "Menunggu", value: menunggu, color: "#f59e0b" },
+    { name: "Tidak Diterima", value: ditolak, color: "#ef4444" },
   ]
 
   return (
@@ -120,7 +125,7 @@ export function StatusChart({ diterima, menunggu }: { diterima: number; menunggu
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-4 gap-y-2 mt-6 w-full text-xs">
+        <div className="grid gap-y-2 mt-6 w-full text-xs">
           <div className="flex items-center gap-2">
             <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#4f46e5" }}></div>
             <span className="text-muted-foreground flex-1">{pct(diterima)}% Diterima</span>
@@ -128,6 +133,10 @@ export function StatusChart({ diterima, menunggu }: { diterima: number; menunggu
           <div className="flex items-center gap-2">
             <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#f59e0b" }}></div>
             <span className="text-muted-foreground flex-1">{pct(menunggu)}% Menunggu</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full" style={{ backgroundColor: "#ef4444" }}></div>
+            <span className="text-muted-foreground flex-1">{pct(ditolak)}% Tidak Diterima</span>
           </div>
         </div>
       </CardContent>

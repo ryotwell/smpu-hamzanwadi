@@ -25,10 +25,11 @@ import {
   School,
   Settings,
   Trophy,
+  type LucideIcon,
 } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
 
-const items = [
+const items: { title: string; url: string; icon: LucideIcon; badge?: string }[] = [
   { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
   { title: "PPDB Online", url: "/admin/ppdb", icon: GraduationCap },
   { title: "Hasil Seleksi SAW", url: "/admin/saw", icon: Trophy },

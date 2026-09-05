@@ -32,8 +32,16 @@ export async function updateStudentScores(_previousState: { success: boolean; me
 }
 
 export async function verifyStudent(id: string) {
-  await prisma.student.update({ where: { id }, data: { isAccepted: true } });
+  await prisma.student.update({ where: { id }, data: { status: "DITERIMA" } });
   revalidatePath("/admin/ppdb");
+  revalidatePath("/admin/saw");
+  revalidatePath(`/admin/ppdb/${id}`);
+}
+
+export async function rejectStudent(id: string) {
+  await prisma.student.update({ where: { id }, data: { status: "DITOLAK" } });
+  revalidatePath("/admin/ppdb");
+  revalidatePath("/admin/saw");
   revalidatePath(`/admin/ppdb/${id}`);
 }
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Eye, FileCheck, MoreHorizontal, Trash2 } from "lucide-react";
+import { Eye, FileCheck, MoreHorizontal, Trash2, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -14,7 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { deleteStudent, verifyStudent } from "./actions";
+import { deleteStudent, rejectStudent, verifyStudent } from "./actions";
 
 export function RowActions({ id }: { id: string }) {
   const router = useRouter();
@@ -24,10 +24,23 @@ export function RowActions({ id }: { id: string }) {
     setBusy(true);
     try {
       await verifyStudent(id);
-      toast.success("Pendaftar diverifikasi.");
+      toast.success("Pendaftar diterima di sekolah.");
       router.refresh();
     } catch {
-      toast.error("Verifikasi gagal.");
+      toast.error("Gagal memperbarui status.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const reject = async () => {
+    setBusy(true);
+    try {
+      await rejectStudent(id);
+      toast.success("Pendaftar ditolak.");
+      router.refresh();
+    } catch {
+      toast.error("Gagal memperbarui status.");
     } finally {
       setBusy(false);
     }
@@ -63,9 +76,9 @@ export function RowActions({ id }: { id: string }) {
               Detail
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem disabled={busy} onClick={verify}>
-            <FileCheck className="mr-2 h-4 w-4" />
-            Verifikasi
+          <DropdownMenuItem variant="destructive" disabled={busy} onClick={reject}>
+            <XCircle className="mr-2 h-4 w-4" />
+            Tolak
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
