@@ -35,6 +35,7 @@ export function Footer() {
                     <ul className="space-y-2.5 text-sm">
                         {[
                             ["/tentang-sekolah", "Tentang Sekolah"],
+                            ["/cek-kelulusan", "Cek Status Kelulusan"],
                             ["#program", "Program Unggulan"],
                             ["#fasilitas", "Fasilitas"],
                             ["#berita", "Berita & Artikel"],

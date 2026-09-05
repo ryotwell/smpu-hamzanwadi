@@ -12,6 +12,7 @@ const NAV_LINKS = [
     { href: "#fasilitas", label: "Fasilitas" },
     { href: "#berita", label: "Berita" },
     { href: "#faq", label: "FAQ" },
+    { href: "/cek-kelulusan", label: "Kelulusan" },
 ];
 
 export function Navbar() {
