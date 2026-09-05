@@ -7,7 +7,7 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_LINKS = [
-    // { href: "#tentang", label: "Tentang" },
+    { href: "/tentang-sekolah", label: "Tentang" },
     { href: "#program", label: "Program" },
     { href: "#fasilitas", label: "Fasilitas" },
     { href: "#berita", label: "Berita" },
