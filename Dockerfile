@@ -26,7 +26,8 @@ ARG NEXT_PUBLIC_SCHOOL_CONTACT_EMAIL
 ARG NEXT_PUBLIC_SCHOOL_CONTACT_PHONE
 ARG NEXT_PUBLIC_SCHOOL_CONTACT_MAP
 
-RUN pnpm exec prisma generate && pnpm build
+# pnpm hanya ada di stage deps — builder pakai binary lokal dari node_modules
+RUN ./node_modules/.bin/prisma generate && ./node_modules/.bin/next build
 
 # ── runner: image runtime minimal dari output standalone ─────────────────
 FROM base AS runner
