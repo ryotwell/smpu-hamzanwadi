@@ -28,8 +28,6 @@ services:
       - SCHOOL_JENJANG_CODE=${SCHOOL_JENJANG_CODE}
       - SCHOOL_PROV_CODE=${SCHOOL_PROV_CODE}
       - SCHOOL_KAB_CODE=${SCHOOL_KAB_CODE}
-    ports:
-      - "3000:3000"
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: always
